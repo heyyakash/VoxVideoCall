@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+@layer base{
+  *{
+    @apply box-border;
+  }
+  body{
+    @apply bg-black font-m text-white;
+  }
+}
+
+@layer utilities{
+  .absolute-center{
+    @apply left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%];
+  }
+  .flex-center{
+    @apply flex items-center justify-center;
+  }
+  h1{
+    @apply text-[3.5rem] font-[700];
+  }
+  h2{
+    @apply text-[2.5rem] font-[600];  
+  }
+  .trans{
+    @apply transition-all duration-150;
+  }
+  p{
+    @apply text-white/50 font-[600];
+  }
+}
+
+@layer components{
+  .input-primary{
+    @apply w-full p-6 rounded-lg outline-none bg-white/10;
+  }
+  .input-sec{
+    @apply border-none text-white placeholder:text-white bg-transparent outline-none w-full m-0 text-lg;
+  }
+  .oauthbox{
+    @apply min-w-[160px] flex flex-col bg-gray-400/20 p-5 trans hover:bg-gray-400/30 cursor-pointer rounded-xl;
+  }
+}
+
