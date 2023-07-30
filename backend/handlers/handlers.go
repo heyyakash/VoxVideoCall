@@ -1,10 +1,12 @@
 package handlers
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
+	"videocallapp/helpers"
+	"videocallapp/models"
 
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
@@ -19,23 +21,31 @@ func wsCheckOrigin(r *http.Request) bool {
 	return true
 }
 
-func CreateRoom(w http.ResponseWriter, r *http.Request) {
-	id := uuid.New().String()
-	type resp struct {
-		id string `json:"id"`
+func CreateRoom() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id := uuid.New().String()
+		models.RoomManager.CreateRoom(id)
+		ctx.JSON(200, helpers.GenerateResponse(id, true))
 	}
-	var response resp
-	response.id = id
-	log.Print(response)
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(w).Encode(&response.id)
 }
 
-func JoinRoom(w http.ResponseWriter, r *http.Request) {
-	_, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		w.Write([]byte("Connection failed"))
-		return
-	}
+func JoinRoom() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
+		if err != nil {
+			log.Print("Error in upgrading to ws connection ", err.Error())
+			ctx.JSON(500, helpers.GenerateResponse("Couldn't upgrade to websocket", false))
+			return
+		}
 
+		user := models.Client{
+			Host: false,
+			Conn: ws,
+		}
+
+		go user.ReadMessage()
+		go user.WriteMessage()
+
+		// defer ws.Close()
+	}
 }

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"videocallapp/configs"
 	"videocallapp/helpers"
@@ -40,12 +41,13 @@ func LoginUser() gin.HandlerFunc {
 		//generate jwt token
 		token, err := helpers.GenerateJWT(req.Email)
 		if err != nil {
+			log.Print("Error in generating jwt : ", err)
 			ctx.JSON(500, helpers.GenerateResponse(err.Error(), false))
 			return
 		}
 
 		//success response
-		ctx.SetCookie("auth", token, 3600, "/", "app.localhost", false, true)
+		ctx.SetCookie("auth", token, 3600, "/", "localhost", false, true)
 		ctx.JSON(200, helpers.GenerateResponse(token, true))
 
 	}

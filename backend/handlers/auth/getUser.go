@@ -18,6 +18,17 @@ func GetUser() gin.HandlerFunc {
 		}
 
 		log.Print(cookie)
-		ctx.JSON(200, gin.H{"message": "Got the cookie", "success": true})
+		user, err := helpers.DecodeJWT(cookie)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.Print(user)
+
+		ctx.JSON(200, gin.H{"message": user, "success": true})
+		// jwt := ctx.Request.Header["auth-token"]
+		// log.Print(jwt)
+		// ctx.JSON(200, helpers.GenerateResponse("Checked", true))
+
 	}
 }
