@@ -39,8 +39,9 @@ func JoinRoom() gin.HandlerFunc {
 		}
 
 		user := models.Client{
-			Host: false,
-			Conn: ws,
+			Host:    false,
+			Conn:    ws,
+			Channel: make(chan models.Event),
 		}
 
 		go user.ReadMessage()

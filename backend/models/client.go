@@ -39,21 +39,11 @@ func (c *Client) ReadMessage() {
 			c.Email = msg.Email
 			c.RoomId = msg.RoomId
 			RoomManager.InsertIntoRoom(msg.RoomId, c)
-			for _, peers := range RoomManager.rooms[c.RoomId] {
-				if peers.Email != c.Email {
-					peers.Channel <- msg
-				}
-
+			log.Println(c.Email, " joins : ", c.RoomId)
+			for _, peers := range RoomManager.rooms[msg.RoomId] {
+				peers.Channel <- msg
 			}
-			for key := range RoomManager.rooms {
-				for _, value := range RoomManager.rooms[key] {
-					log.Println(key, " : ", value.Email)
-				}
-			}
-
 		}
-		c.Conn.WriteJSON(gin.H{"message": "GOt Your message"})
-
 	}
 }
 
@@ -61,17 +51,19 @@ func (c *Client) WriteMessage() {
 	defer func() {
 		RoomManager.DeleteClient(c.RoomId, c)
 		c.Conn.Close()
+		log.Print("Client Left")
 	}()
 	for {
 		select {
-		case msg, ok := <-c.Channel:
+		case evnt, ok := <-c.Channel:
 			if !ok {
 				if err := c.Conn.WriteMessage(websocket.CloseMessage, nil); err != nil {
 					log.Println("Connection closed ", err)
 				}
 				return
 			}
-			c.Conn.WriteJSON(msg)
+			log.Println(evnt.Message)
+			c.Conn.WriteJSON(gin.H{"message": "hello"})
 		}
 	}
 }
