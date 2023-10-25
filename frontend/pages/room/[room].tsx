@@ -1,14 +1,19 @@
+import Chat from '@/components/Chat'
+import { message } from '@/types/message'
 import { useRouter } from 'next/router'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const App = () => {
     const router = useRouter()
-    const Conn = useRef<WebSocket>(null)
+    const [Conn, setConn ]= useState<WebSocket>()
+    const [chats,setChats] = useState<message[]>([])
 
     useEffect(() => {
-        const { room } = router.query
-        const email = localStorage.getItem("vox_email") as string
         
+        const { room } = router.query
+        console.log(room)
+        const email = localStorage.getItem("vox_email") as string
+
         if (room !== undefined && room !== null) {
             const connection = new WebSocket('ws://localhost:5000/room/join')
             connection.onopen = () => {
@@ -24,13 +29,26 @@ const App = () => {
                 console.log("Connection closed")
             }
             connection.onmessage = (e) => {
-                console.log(e)
+                console.log(JSON.parse(e.data).message)
+                setChats(chats => [...chats, JSON.parse(e.data).message])
             }
+            // console.log(connection)
+            setConn(connection)
+        }
+
+        return ()=>{
+            Conn?.close()
         }
     }, [])
-
+    if(Conn)
     return (
-        <div></div>
+
+        <section className='min-h-[100vh] relative bg-[url("/bg6.svg")] bg-opacity-10 bg-cover'>
+
+            <div className=' absolute inset-0 z-10 flex-center backdrop-blur-[500px] bg-black/40 flex-col gap-[2rem]'>
+                <Chat connection = {Conn} chats = {chats} setChats = {setChats}/>
+            </div>
+        </section>
     )
 }
 

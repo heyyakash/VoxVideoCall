@@ -27,7 +27,6 @@ export const loginUser = async (email: string, password: string) => {
 
 export const getUser = async () => {
     const jwt = localStorage.getItem("vox_user") as string
-    // console.log(jwt)
     const result = await fetch(`${host}/user/details`,{
         method:"GET",
         headers:{

@@ -1,9 +1,12 @@
 import { getUser } from '@/api/user'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import {FiLogOut} from 'react-icons/fi'
 
 const Profile = () => {
     const router = useRouter()
+    const [user,setUser] = useState<string | null>(null)
+    const [roomId, setRoomId] = useState("")
     const createRoom = async () => {
         try {
             const data = await fetch("http://localhost:5000/room/create") 
@@ -22,17 +25,37 @@ const Profile = () => {
     }, [])
     
 
+    const signOut = ()=>{
+        localStorage.removeItem("vox_user")
+        router.push('/login')
+    }
+
     const getUserDetails = async()=>{
         const data = await getUser()
         if(!data.success){
             router.push('/login')
             return
         }
+        setUser(data.message)
         // localStorage.setItem("vox_email",data.message)
+    }
+
+    const joinRoom = () => {
+        if(roomId.length!==0){
+            router.push(`room/${roomId}`)
+        }
     }
 
     return (
         <section className='min-h-[100vh] relative bg-[url("/bg5.svg")] bg-cover'>
+            <div className="absolute top-3 z-[100] right-3 p-2 flex gap-2">
+                <div className='rounded-lg bg-white text-black p-3 padding text-sm font-semibold'>
+                    {user   }
+                </div>
+                <button onClick = {()=>signOut()} className='bg-red-500 trans rounded-lg font-bold cursor-pointer p-3 text-sm'>
+                    <FiLogOut />
+                </button>
+            </div>
             <div className=' absolute inset-0 z-10 flex-center flex-col gap-[2rem]'>
                 <div className='flex-center flex-col'>
                     <h1>Start a Video Call</h1>
@@ -46,8 +69,8 @@ const Profile = () => {
                     </div>
                     <h2>/</h2>
                     <div className=' w-full p-4'>
-                        <input type="text" placeholder='Room Id' className='input-primary' />
-                        <button className='w-full p-4 text-lg font-bold mt-3 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 rounded-lg'>Join</button>
+                        <input type="text" value = {roomId} onChange={(e)=>setRoomId(e.target.value)} placeholder='Room Id' className='input-primary' />
+                        <button onClick={()=>joinRoom()} className='w-full p-4 text-lg font-bold mt-3 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 rounded-lg'>Join</button>
                     </div>
                 </div>
             </div>
