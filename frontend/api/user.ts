@@ -15,7 +15,7 @@ export const createUser = async (email: string, password: string) => {
 export const loginUser = async (email: string, password: string) => {
     const result = await fetch(`${host}/user/login`, {
         method: "POST",
-        credentials:"same-origin",
+        credentials:"include",
         headers: {
             "Content-Type": "application/json"
         },
@@ -24,3 +24,17 @@ export const loginUser = async (email: string, password: string) => {
     const res = await result.json()
     return res
 } 
+
+export const getUser = async () => {
+    const jwt = localStorage.getItem("vox_user") as string
+    // console.log(jwt)
+    const result = await fetch(`${host}/user/details`,{
+        method:"GET",
+        headers:{
+            "auth-token":jwt
+        },
+        credentials:"include"
+    })
+    const res = await result.json()
+    return res
+}

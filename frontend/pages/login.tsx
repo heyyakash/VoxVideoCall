@@ -13,6 +13,7 @@ const App = () => {
         e.preventDefault()
         const result = await createUser(email, password)
         if(result?.success){
+            localStorage.setItem("vox_email",email)
             localStorage.setItem("vox_user",result.message)
             router.push('/profile')
         }
@@ -20,8 +21,8 @@ const App = () => {
     const handleLogin = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const result = await loginUser(email, password)
-        console.log(result)
         if(result?.success){
+            localStorage.setItem("vox_email",email)
             localStorage.setItem("vox_user",result.message)
             router.push('/profile')
         }
