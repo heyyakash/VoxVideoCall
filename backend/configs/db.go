@@ -3,18 +3,29 @@ package configs
 import (
 	"context"
 	"log"
+	"os"
 
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var (
-	connectionString = "mongodb+srv://heyyakash:cybaTssIp0JGQCk0@nodetaskmanager.aejwp.mongodb.net/?retryWrites=true&w=majority"
-	Collection       *mongo.Collection
+	Collection *mongo.Collection
 )
 
+func loadConnectionString(key string) string {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error Loading the .env file")
+	}
+
+	return os.Getenv(key)
+}
+
 func ConnectDB() {
+	connectionString := loadConnectionString("MONGO_URL")
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	opts := options.Client().ApplyURI(connectionString).SetServerAPIOptions(serverAPI)
 	client, err := mongo.Connect(context.TODO(), opts)
