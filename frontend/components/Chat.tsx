@@ -32,8 +32,6 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
   const sendMessage = async () => {
     const {room} = router.query
     if(msg.length===0) return
-    // console.log(connection)
-    // console.log(user)
     if(connection && user){
       // console.log("fired")
       const Event :message = {
@@ -54,9 +52,9 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
 
 
   return (
-    <div className="h-[90%] w-[380px] bg-black/50 rounded-sm">
+    <div className="h-[95%] w-[380px] bg-black/50 rounded-lg">
       <div className="w-full text-lg font-semibold p-3">Chat</div>
-      <div className="w-full h-[87%] overflow-auto p-2">
+      <div className="w-full h-[89%] overflow-auto p-3">
        {
         chats.map((chat,i)=>{
           if(chat?.event==="send-message")
