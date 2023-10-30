@@ -8,12 +8,21 @@ const openMediaDevices = async (constraints : MediaStreamConstraints) => {
 
 const peerConnection = new RTCPeerConnection(configuration)
 
-export const playVideoFromCamera = async() => {
+export const getStream = async() => {
     try{
         const stream = await openMediaDevices({
             video:true,
             audio:true
         })
+        return stream
+    }catch(err){
+        console.log(err)
+    }
+}
+
+export const playVideoFromCamera = async(stream: MediaStream) => {
+    try{
+        
         const videoElement : HTMLVideoElement | null = document.querySelector("video#localVideo") 
         if(videoElement){
             videoElement.srcObject = stream

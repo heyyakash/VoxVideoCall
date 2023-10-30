@@ -25,7 +25,7 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
     if (!data.success) {
       router.push('/login')
     }
-    console.log(data)
+    // console.log(data)
     setUser(data.message)
   }
 

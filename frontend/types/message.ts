@@ -3,5 +3,7 @@ export interface message{
     message : string,
     email: string,
     roomid:string
-    RTCOffer? : RTCSessionDescription | null | undefined
+    rtcoffer? : RTCSessionDescription | null | undefined
+    icecandidates?: RTCIceCandidate
+    rtcanswer?: RTCSessionDescription | null | undefined
 }
