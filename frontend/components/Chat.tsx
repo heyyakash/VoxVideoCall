@@ -4,6 +4,7 @@ import { FC, use, useEffect, useState } from 'react'
 import { BiSend } from 'react-icons/bi'
 import Message from './Message'
 import { message } from '@/types/message'
+import { BsChatLeftFill } from 'react-icons/bs'
 
 interface props {
   connection: WebSocket | undefined
@@ -52,9 +53,12 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
 
 
   return (
-    <div className="h-[95%] w-[380px] bg-black/50 rounded-lg">
-      <div className="w-full text-lg font-semibold p-3">Chat</div>
-      <div className="w-full h-[89%] overflow-auto p-3">
+    <div className="h-full w-full flex flex-col bg-black/20 rounded-lg">
+      <div className='w-full p-5 h-[93.3px] border-b border-b-black flex items-center'>
+        <h3 className='text-xl font-semibold'>Chat</h3>
+        <BsChatLeftFill className='text-2xl mx-3' />
+      </div>
+      <div className="w-full h-[80vh] overflow-auto p-3">
        {
         chats.map((chat,i)=>{
           if(chat?.event==="send-message")
@@ -64,7 +68,7 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
         })
        }
       </div>
-      <div className=" w-full flex border-t">
+      <div className=" w-full mt-auto flex border-t">
         <input value = {msg} onChange={(e)=>setMsg(e.target.value)} type="text" placeholder='Enter Your Message' className="w-full h-[50px] p-2 bg-transparent font-semibold text-white outline-none" />
         <button onClick={()=>sendMessage()} className="w-[55px] grid place-items-center text-xl"><BiSend /></button>
       </div>

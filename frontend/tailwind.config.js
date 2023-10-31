@@ -14,6 +14,16 @@ module.exports = {
       },
       fontFamily:{
         'm':'Montserrat'
+      },
+      backgroundColor:{
+        'prim':"#252525",
+        'sec':'#FA7268',
+        'tert':"#C62368"
+      },
+      colors:{
+        'prim':"#252525",
+        'sec':'#FA7268',
+        "tert":"#C62368"
       }
     },
   },
