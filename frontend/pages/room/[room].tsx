@@ -11,63 +11,54 @@ const App = () => {
     const [chats, setChats] = useState<message[]>([])
     const stream = useRef<MediaStream>()
     const peerRef = useRef<RTCPeerConnection>()
-    const [roomId, setRoomId] = useState<string | null>(null)
-    const [user,setUser] = useState<string | null>(null)
+    const roomIdRef = useRef<string>()
+    const emailRef = useRef<string>()
     // const partnerVideo  = useRef<HTMLVideoElement>()
 
     useEffect(() => {
         const { room } = router.query
         const email = localStorage.getItem("vox_email") as string
-        setUser(email)
-        setRoomId(room as string)
+        roomIdRef.current = room as string
+        emailRef.current = email
 
         if (room !== undefined && room !== null) {
             const connection = new WebSocket('ws://localhost:5000/room/join')
             connection.onopen = async () => {
                 console.log("Connection Established")
                 handleWebSocketConnectionOnOpen(connection, email, room as string)
-                
-        
+
+
                 stream.current = await getStream()
-                const localVideo : HTMLVideoElement | null = document.querySelector("video#localVideo")
-                if(localVideo && stream.current){
+                const localVideo: HTMLVideoElement | null = document.querySelector("video#localVideo")
+                const partnerVideo: HTMLVideoElement | null = document.querySelector("video#partnerVideo")
+                if (localVideo && partnerVideo && stream.current) {
                     localVideo.srcObject = stream.current
+                    // partnerVideo.srcObject = stream.current
                 }
                 callUsers()
-                // if (stream?.current) {
-                //     const offer = await playVideoFromCamera(stream.current)
-                //     if (offer) {
-                //         const payload: message = {
-                //             event: "send-offer",
-                //             email,
-                //             message: "send-offer",
-                //             roomid: room as string,
-                //             RTCOffer: offer
-                //         }
-                //         connection.send(JSON.stringify(payload))
-                //     }
-                // }
             }
             connection.onclose = () => {
                 console.log("Connection closed")
             }
             connection.onmessage = async (e) => {
                 const messageData = JSON.parse(e.data)
-                const message : message = messageData.message
-                if(message.event === "send-message"){
+                const message: message = messageData.message
+
+                console.log(message)
+                if (message.event === "send-message") {
                     setChats(chats => [...chats, JSON.parse(e.data).message])
                 }
-                else if (message.icecandidates) {
-                    console.log("Ice candidates received ", messageData.message.icecandidates)
-                    try{
-                        await peerRef.current?.addIceCandidate(messageData.message.icecandidates)
-                    }catch(err){
+                else if (message.event === "ice-candidates") {
+                    console.log("Ice candidates received ", message)
+                    try {
+                        await peerRef.current?.addIceCandidate(message.icecandidates)
+                    } catch (err) {
                         console.log("Error Adding Ice Candidates", err)
                     }
-                }else if (message.rtcoffer){
+                } else if (message.rtcoffer) {
                     console.log("Recevied an offer")
                     handleOffer(message.rtcoffer)
-                }else if (message.rtcanswer){
+                } else if (message.rtcanswer) {
                     console.log("Recevied answer")
                     peerRef.current?.setRemoteDescription(new RTCSessionDescription(message.rtcanswer))
                 }
@@ -78,48 +69,51 @@ const App = () => {
 
         return () => {
             console.log("cleanup")
-            try{
-                if(stream.current){
+            try {
+                if (stream.current) {
                     console.log("releasing stream")
                     const tracks = stream.current.getTracks()
-                    tracks.forEach(function(track){
+                    tracks.forEach(function (track) {
                         track.stop()
                     })
-                    tracks.forEach(function (track){
+                    tracks.forEach(function (track) {
                         stream.current?.removeTrack(track)
                     })
                 }
-            }catch(err){
+            } catch (err) {
                 console.log(err)
             }
             conn?.current?.close()
 
         }
     }, [])
-    
-    const handleOffer = async (offer:RTCSessionDescription ) => {
-        console.log("Recevied offer")
+
+    const handleOffer = async (offer: RTCSessionDescription) => {
+        console.log("Recevied offer... creating Answer")
         peerRef.current = createPeer()
 
+
         //setting remote description
-        await peerRef.current.setRemoteDescription(new RTCSessionDescription(offer))
-        
-        if(stream?.current){
+        await peerRef?.current?.setRemoteDescription(new RTCSessionDescription(offer))
+
+        if (stream?.current) {
+            console.log(stream.current)
             stream.current.getTracks().forEach((track) => {
                 peerRef.current?.addTrack(track, stream.current as MediaStream)
             })
         }
 
-        const answer = await peerRef.current.createAnswer()
-        await peerRef.current.setLocalDescription(answer)
 
-        if(answer && roomId && user && conn.current && answer){
-            const payload :message = {
-                roomid:roomId,
-                email:user,
-                message:"Sending Answer",
-                event:"send-answer",
-                rtcanswer:peerRef.current.localDescription
+        const answer = await peerRef?.current?.createAnswer()
+        await peerRef?.current?.setLocalDescription(answer)
+
+        if (answer && roomIdRef.current && emailRef.current && conn.current && answer) {
+            const payload: message = {
+                roomid: roomIdRef.current,
+                email: emailRef.current,
+                message: "Sending Answer",
+                event: "send-answer",
+                rtcanswer: peerRef?.current?.localDescription
             }
             conn.current.send(JSON.stringify(payload))
         }
@@ -128,10 +122,10 @@ const App = () => {
 
     const callUsers = async () => {
         console.log("Calling other peers")
-        peerRef.current =  createPeer() 
-        
+        peerRef.current = createPeer()
+
         //adding stream to RTC Connection
-        if(stream?.current){
+        if (stream?.current) {
             stream.current.getTracks().forEach((track) => {
                 peerRef.current?.addTrack(track, stream.current as MediaStream)
             })
@@ -139,9 +133,9 @@ const App = () => {
 
     }
 
-    const createPeer =  () => {
+    const createPeer = () => {
         const newPeer = new RTCPeerConnection({
-            iceServers:[{
+            iceServers: [{
                 urls:"stun:stun.l.google.com:19302"
             }]
         })
@@ -155,64 +149,73 @@ const App = () => {
 
     const handleNegotiationNeeded = async () => {
         console.log("Creating Offer")
-        try{
+        try {
             const myOffer = await peerRef.current?.createOffer()
             await peerRef.current?.setLocalDescription(myOffer)
-            if(conn.current && user && roomId && myOffer){
-                const payload :message = {
-                    email:user,
-                    roomid: roomId,
-                    message:"Sending Offer",
-                    event :"send-offer",
-                    rtcoffer:peerRef.current?.localDescription
+            if (conn.current && emailRef.current && roomIdRef.current && myOffer) {
+                const payload: message = {
+                    email: emailRef.current,
+                    roomid: roomIdRef.current,
+                    message: "Sending Offer",
+                    event: "send-offer",
+                    rtcoffer: peerRef.current?.localDescription
                 }
                 conn.current.send(JSON.stringify(payload))
+                console.log("Offer sent")
             }
-        }catch(err){
-            console.log("Error creating and sending offers ",err)
+        } catch (err) {
+            console.log("Error creating and sending offers ", err)
         }
     }
-    
-    const handleOnIceCandidate = async (e:RTCPeerConnectionIceEvent) => {
-        console.log("Found Ice Candidates")
-        if(e.candidate && user && roomId && conn.current){
-            console.log(e.candidate)
-            const payload :message = {
-                email: user ,
-                roomid:roomId ,
-                message:"Got Ice Candidates",
-                event:"ice-candidates",
-                icecandidates:e.candidate
+
+    const handleOnIceCandidate = async (e: RTCPeerConnectionIceEvent) => {
+        console.log("Found ICE candidates")
+        console.log()
+        if (e.candidate && emailRef.current && roomIdRef.current && conn.current) {
+            console.log("Sending ICE candidates")
+            const payload: message = {
+                email: emailRef.current,
+                roomid: roomIdRef.current,
+                message: "Got Ice Candidates",
+                event: "ice-candidates",
+                icecandidates: e.candidate
             }
             conn.current.send(JSON.stringify(payload))
         }
     }
 
     const handleOnTrack = async (e: RTCTrackEvent) => {
-        console.log("Receving Tracks")
-        const partnerVideo: HTMLVideoElement | null = document.querySelector('video#partnerVideo')
-        if(partnerVideo){
-            partnerVideo.srcObject = e.streams[0]
+
+        if (e.streams.length > 0) {
+            const partnerVideo: HTMLVideoElement | null = document.querySelector('video#partnerVideo');
+            if (partnerVideo) {
+                console.log("Adding remote video", e.streams[0])
+                partnerVideo.srcObject = e.streams[0];
+                partnerVideo.onloadedmetadata = () => {
+                    partnerVideo.play();
+                };
+            }
+            console.log(partnerVideo)
         }
     }
-    
-    
-    
-    
-    if (conn.current)
-        return (
 
-            <section className='min-h-[100vh] relative bg-[url("/bg6.svg")] bg-opacity-10 bg-cover'>
 
-                <div className=' absolute inset-0 z-10 flex items-center px-6 backdrop-blur-[500px] bg-black/40  gap-[2rem]'>
-                    <div className='bg-white/20 h-[95%] rounded-lg flex-1 flex flex-center gap-2'>
-                        <video id="localVideo" className='rounded-xl drop-shadow-xl border-2 ' autoPlay playsInline controls={false}></video>
-                        <video id="parterVideo" className='rounded-xl drop-shadow-xl border-2 ' autoPlay playsInline controls={false}></video>
-                    </div>
-                    <Chat connection={conn.current} chats={chats} setChats={setChats} />
+
+
+    // if (conn.current)
+    return (
+
+        <section className='min-h-[100vh] relative bg-[url("/bg6.svg")] bg-opacity-10 bg-cover'>
+
+            <div className=' absolute inset-0 z-10 flex items-center px-6 backdrop-blur-[500px] bg-black/40  gap-[2rem]'>
+                <div className='bg-white/20 h-[95%] rounded-lg flex-1 flex flex-center gap-2'>
+                    <video id="localVideo" className='rounded-xl drop-shadow-xl border-2 ' autoPlay playsInline controls={false}></video>
+                    <video id="partnerVideo" className='rounded-xl drop-shadow-xl border-2 ' autoPlay playsInline controls={false}></video>
                 </div>
-            </section>
-        )
+                <Chat connection={conn.current} chats={chats} setChats={setChats} />
+            </div>
+        </section>
+    )
 }
 
 export default App
