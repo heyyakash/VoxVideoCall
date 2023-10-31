@@ -65,12 +65,12 @@ const Profile = () => {
 
 
                     <div className=' w-full p-4'>
-                        <button onClick={() => createRoom()} className='w-full p-4 text-lg font-bold mt-3 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 rounded-lg'>Create</button>
+                        <button onClick={() => createRoom()} className='w-full p-4 text-lg font-bold mt-3 bg-[#FA7268] rounded-lg'>Create</button>
                     </div>
                     <h2>/</h2>
                     <div className=' w-full p-4'>
                         <input type="text" value = {roomId} onChange={(e)=>setRoomId(e.target.value)} placeholder='Room Id' className='input-primary' />
-                        <button onClick={()=>joinRoom()} className='w-full p-4 text-lg font-bold mt-3 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 rounded-lg'>Join</button>
+                        <button onClick={()=>joinRoom()} className='w-full p-4 text-lg font-bold mt-3 bg-[#FA7268]  '>Join</button>
                     </div>
                 </div>
             </div>
