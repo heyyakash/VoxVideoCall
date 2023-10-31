@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { MdHomeFilled } from 'react-icons/md'
 import { IoMdSettings } from 'react-icons/io'
 import { BsFillCameraVideoFill, BsFillGrid3X3GapFill, BsFillGridFill, BsFillMicFill, BsFillSquareFill } from 'react-icons/bs'
-import {PiPhoneDisconnectFill} from 'react-icons/pi'
+import { PiPhoneDisconnectFill } from 'react-icons/pi'
 import { message } from '@/types/message'
 import Chat from './Chat'
 
@@ -43,19 +43,19 @@ const Room = () => {
 
                     {/* Header */}
                     <div className='w-full flex relative flex-col h-full backdrop-blur-[100px]  bg-prim/90'>
-                    <div className='absolute left-[50%] -translate-x-[50%] h-[60px] gap-4 px-4 py-10 bottom-[2rem] bg-black/80 rounded-xl flex flex-center'>
-                                <div className='p-4 cursor-pointer trans hover:bg-white/10 rounded-full'>
-                                    <BsFillMicFill />
-                                </div>
-                                <div className='p-4 cursor-pointer text-white bg-red-500 trans hover:bg-white/10 rounded-full'>
-                                    <PiPhoneDisconnectFill />
-                                </div>
-                                <div className='p-4 cursor-pointer trans hover:bg-white/10 rounded-full'>
-                                    <BsFillCameraVideoFill />
-                                </div>
+                        <div className='absolute left-[50%] -translate-x-[50%] h-[60px] gap-4 px-5 py-10 bottom-[2rem] bg-black/80 rounded-xl flex flex-center'>
+                            <div className='p-4 cursor-pointer trans hover:bg-white/10 rounded-full'>
+                                <BsFillMicFill />
                             </div>
-                        <div className='w-full p-5 h-[100px] border-b border-b-black relative flex items-center'>
-                           
+                            <div className='p-4 cursor-pointer text-white bg-red-500 trans hover:bg-white/10 rounded-full'>
+                                <PiPhoneDisconnectFill />
+                            </div>
+                            <div className='p-4 cursor-pointer trans hover:bg-white/10 rounded-full'>
+                                <BsFillCameraVideoFill />
+                            </div>
+                        </div>
+                        <div className='w-full p-10 h-[100px] border-b border-b-black relative flex items-center'>
+
                             <h3 className='text-xl font-bold'>#243314-21323123-2132</h3>
                             <button disabled={copied} onClick={() => copyRoomId("123232-34243-3243-434")} className='bg-sec trans mx-3 px-2 py-[2px] rounded-md font-semibold'>
                                 {copied ? "Copied" : "Copy"}
