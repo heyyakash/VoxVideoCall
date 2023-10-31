@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"videocallapp/configs"
 	"videocallapp/helpers"
@@ -45,7 +44,7 @@ func CreateUser() gin.HandlerFunc {
 			})
 			return
 		}
-		log.Print(ctx.Request.Host)
+		// log.Print(ctx.Request.Host)
 		ctx.SetCookie("authorization", jwt, 3600, "/", ctx.Request.Host, false, true)
 		ctx.JSON(200, gin.H{
 			"message": jwt,

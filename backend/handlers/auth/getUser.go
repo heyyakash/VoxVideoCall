@@ -16,14 +16,12 @@ func GetUser() gin.HandlerFunc {
 			ctx.JSON(http.StatusForbidden, helpers.GenerateResponse("Cookie Not Present", false))
 			return
 		}
-
-		log.Print(cookie)
 		user, err := helpers.DecodeJWT(cookie)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		log.Print(user)
+		// log.Print(user)
 
 		ctx.JSON(200, gin.H{"message": user, "success": true})
 		// jwt := ctx.Request.Header["auth-token"]

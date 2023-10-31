@@ -7,11 +7,20 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// type RTCOffer struct {
+// 	Type string `json:"type"`
+// 	Sdp  string `json:"sdp"`
+// 	// You can add more fields as needed
+// }
+
 type Event struct {
-	Event   string `json:"event"`
-	Email   string `json:"email"`
-	RoomId  string `json::"roomid"`
-	Message string `json:"message"`
+	Event         string      `json:"event"`
+	Email         string      `json:"email"`
+	RoomId        string      `json::"roomid"`
+	Message       string      `json:"message"`
+	RTCOffer      interface{} `json:"rtcoffer"`
+	IceCandidates interface{} `json:icecandidates`
+	RTCAnswer     interface{} `json:rtcanswer`
 }
 
 type Client struct {
@@ -35,13 +44,23 @@ func (c *Client) ReadMessage() {
 			}
 			break
 		}
+		// log.Print(len())
 		if msg.Event == "join-room" {
 			c.Email = msg.Email
 			c.RoomId = msg.RoomId
 			RoomManager.InsertIntoRoom(msg.RoomId, c)
-			log.Println(c.Email, " joins : ", c.RoomId)
 			for _, peers := range RoomManager.rooms[msg.RoomId] {
 				peers.Channel <- msg
+			}
+		} else if msg.Event == "send-message" {
+			for _, peers := range RoomManager.rooms[msg.RoomId] {
+				peers.Channel <- msg
+			}
+		} else {
+			for _, peers := range RoomManager.rooms[msg.RoomId] {
+				if peers.Email != msg.Email {
+					peers.Channel <- msg
+				}
 			}
 		}
 	}
@@ -63,7 +82,7 @@ func (c *Client) WriteMessage() {
 				return
 			}
 			log.Println(evnt.Message)
-			c.Conn.WriteJSON(gin.H{"message": "hello"})
+			c.Conn.WriteJSON(gin.H{"message": evnt})
 		}
 	}
 }
