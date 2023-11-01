@@ -10,6 +10,7 @@ const App = () => {
     const conn = useRef<WebSocket>()
     const [chats, setChats] = useState<message[]>([])
     const stream = useRef<MediaStream>()
+    const peers : {[key:string] : RTCPeerConnection} = {}
     const peerRef = useRef<RTCPeerConnection>()
     const roomIdRef = useRef<string>()
     const emailRef = useRef<string>()
@@ -45,6 +46,9 @@ const App = () => {
 
                 if (message.event === "send-message") {
                     setChats(chats => [...chats, JSON.parse(e.data).message])
+                }
+                else if(message.event === "join-room"){
+                    handleNewUser(message)
                 }
                 else if (message.event === "ice-candidates") {
                     console.log("Ice candidates received ")
@@ -85,6 +89,13 @@ const App = () => {
 
         }
     }, [])
+
+
+    const handleNewUser = (message: message) => {
+        const newPeer = createPeer()
+        const {email} = message
+        peers[email] = newPeer
+    }
 
     const handleOffer = async (offer: RTCSessionDescription) => {
         console.log("Recevied offer... creating Answer")

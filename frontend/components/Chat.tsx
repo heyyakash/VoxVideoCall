@@ -1,10 +1,10 @@
 import { getUser } from '@/api/user'
 import { useRouter } from 'next/router'
-import { FC, use, useEffect, useState } from 'react'
+import { FC, FormEvent, MouseEvent, useEffect, useState } from 'react'
 import { BiSend } from 'react-icons/bi'
 import Message from './Message'
 import { message } from '@/types/message'
-import { BsChatLeftFill } from 'react-icons/bs'
+import { BsChatFill, BsChatLeftFill } from 'react-icons/bs'
 
 interface props {
   connection: WebSocket | undefined
@@ -30,23 +30,29 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
     setUser(data.message)
   }
 
-  const sendMessage = async () => {
-    const {room} = router.query
+  const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     if(msg.length===0) return
+    console.log("clicked")
+    const {test:room} = router.query
+
     if(connection && user){
-      // console.log("fired")
+      
       const Event :message = {
         message:msg,
         email: user,
         event:"send-message",
         roomid:room as string
       }
+      console.log(Event)
       try{
         connection.send(JSON.stringify(Event))
-        // setChats((chats)=>[...chats, Event])
+        console.log("sent") 
+        setMsg("")
       }catch(err){
         console.log(err)
       }
+      
     }
   }
 
@@ -54,9 +60,11 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
 
   return (
     <div className="h-full w-full flex flex-col bg-black/20 rounded-lg">
-      <div className='w-full p-5 h-[93.3px] border-b border-b-black flex items-center'>
-        <h3 className='text-xl font-semibold'>Chat</h3>
-        <BsChatLeftFill className='text-2xl mx-3' />
+      <div className='w-full p-5 h-[100px] border-b border-b-black flex items-center'>
+        <BsChatFill className='text-2xl mx-3 text-sec' />
+        <div className='ml-auto rounded-full w-[50px] h-[50px] overflow-hidden'>
+          <img className='object-cover h-full w-full' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTlZhqdo9H286H_3WJjc0s1UfcFwPtZhiMYw&usqp=CAU" alt="avatar" />
+        </div>
       </div>
       <div className="w-full h-[80vh] overflow-auto p-3">
        {
@@ -68,10 +76,11 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
         })
        }
       </div>
-      <div className=" w-full mt-auto flex border-t">
+      <form onSubmit={(e)=>sendMessage(e)} className=" w-full mt-auto flex border-t border-t-black">
         <input value = {msg} onChange={(e)=>setMsg(e.target.value)} type="text" placeholder='Enter Your Message' className="w-full h-[50px] p-2 bg-transparent font-semibold text-white outline-none" />
-        <button onClick={()=>sendMessage()} className="w-[55px] grid place-items-center text-xl"><BiSend /></button>
-      </div>
+        <button type="submit" className="w-[55px] grid place-items-center text-xl"><BiSend className='text-sec' /></button>
+        {/* <button type = "submit" ><BiSend className='text-sec' /></button> */}
+      </form>
     </div>
   )
 }

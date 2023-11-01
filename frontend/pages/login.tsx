@@ -30,7 +30,7 @@ const App = () => {
 
 
     
-
+    
     return (
         <section className='min-h-[100vh] relative bg-[url("/bg6.svg")] bg-opacity-10 bg-cover'>
 

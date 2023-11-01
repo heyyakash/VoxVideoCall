@@ -12,7 +12,7 @@ const Profile = () => {
             const data = await fetch("http://localhost:5000/room/create") 
             const res = await data.json()
             if(res.success){
-              router.push(`/room/${res.message}`)
+              router.push(`/test/${res.message}`)
             }
         } catch (error) {
             console.log(error)
@@ -42,7 +42,7 @@ const Profile = () => {
 
     const joinRoom = () => {
         if(roomId.length!==0){
-            router.push(`room/${roomId}`)
+            router.push(`test/${roomId}`)
         }
     }
 
