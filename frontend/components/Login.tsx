@@ -25,7 +25,6 @@ const Login = () => {
     if (isValidURL(image)) {
       const result = await createUser(name, image,email, password)
       if (result?.success) {
-        localStorage.setItem("vox_email", email)
         localStorage.setItem("vox_user", result.message)
         router.push('/profile')
       }

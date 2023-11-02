@@ -6,5 +6,7 @@ export interface message{
     rtcoffer? : RTCSessionDescription | null | undefined
     icecandidates?: RTCIceCandidate
     rtcanswer?: RTCSessionDescription | null | undefined
-    to?:string
+    to?:string,
+    name? : string
+    image? :string
 }
