@@ -15,7 +15,7 @@ import Logo from './Logo'
 const Room = () => {
     const [copied, setCopied] = useState(false)
     const [active, setActive] = useState(false)
-    const arr =[1]
+    const arr = [1]
     const [cols, setCols] = useState(3)
     const [chats, setChats] = useState<message[]>([])
     const emailRef = useRef<string>()
@@ -52,6 +52,7 @@ const Room = () => {
         emailRef.current = email
 
         if (room !== undefined && room !== null) {
+
             const connection = new WebSocket('ws://localhost:5000/room/join')
             connection.onopen = async () => {
                 console.log("Connection Established")
@@ -73,11 +74,12 @@ const Room = () => {
                     console.log(peers)
                     handleOffer(message)
                 } else if (message.event === "ice-candidates") {
-                    
                     handleIncommingIce(message)
                 } else if (message.event === "send-answer") {
                     console.log(peers)
                     handleAnswer(message)
+                } else if (message.event === "left-room") {
+                    handleUserLeft(message)
                 }
             }
 
@@ -116,6 +118,14 @@ const Room = () => {
         }
     }
 
+    //handle user leaving room 
+    const handleUserLeft = async (e: message) => {
+        const video = document.getElementById(`${e.email}`)
+        if (video) {
+            video.remove()
+        }
+    }
+
     //hander new user 
     const handleNewUser = async (e: message) => {
         console.log("New user joined")
@@ -134,10 +144,10 @@ const Room = () => {
         if (e.rtcoffer) {
             console.log("Received new offer ! Creating Answer")
             const peer = createPeer(e.email)
-            try{
+            try {
                 await peer.setRemoteDescription(new RTCSessionDescription(e.rtcoffer))
-            }catch(err){
-                console.log("Error handling offer",err)
+            } catch (err) {
+                console.log("Error handling offer", err)
             }
 
             stream.current = await getStream()
@@ -149,7 +159,7 @@ const Room = () => {
             }
 
             peers[e.email] = peer
-           
+
 
             const answer = await peer.createAnswer()
             await peer.setLocalDescription(answer)
@@ -161,14 +171,14 @@ const Room = () => {
                     email: emailRef.current,
                     message: "Sending Answer",
                     event: "send-answer",
-                    to:e.email,
+                    to: e.email,
                     rtcanswer: peer.localDescription
                 }
                 conn.current.send(JSON.stringify(payload))
                 console.log("Answer sent")
             }
 
-            
+
         }
     }
 
@@ -176,12 +186,12 @@ const Room = () => {
     const handleAnswer = (e: message) => {
         if (e.rtcanswer) {
             console.log("Got an answer ")
-            try{
+            try {
                 peers[e.email].setRemoteDescription(new RTCSessionDescription(e.rtcanswer))
-            }catch(err){
+            } catch (err) {
                 console.log("Error in handling answer", err)
             }
-            
+
         }
 
     }
@@ -225,7 +235,7 @@ const Room = () => {
                     message: "Sending Ice Candidates",
                     event: "ice-candidates",
                     icecandidates: e.candidate,
-                    to:email
+                    to: email
                 }
                 conn.current.send(JSON.stringify(payload))
             }
@@ -257,7 +267,7 @@ const Room = () => {
                 <div className='h-[100vh] bg-prim/75 backdrop-blur-[100px] flex'>
                     <div className='w-[100px] relative flex flex-center bg-black/40 '>
                         <div className='absolute top-0 left-0 w-full h-[100px] flex flex-center'>
-                            <Logo version = "lite" />
+                            <Logo version="lite" />
                         </div>
                         <div className='flex text-2xl text-prim w-full flex-col gap-4'>
                             <div className='flex-center w-full h-[50px] border-r-2 border-r-sec'>
@@ -279,7 +289,7 @@ const Room = () => {
                                 <div className='p-4 cursor-pointer trans hover:bg-white/10 rounded-full'>
                                     <BsFillMicFill />
                                 </div>
-                                <div onClick={()=>endCall()} className='p-4 cursor-pointer text-white bg-red-500 trans hover:bg-white/10 rounded-full'>
+                                <div onClick={() => endCall()} className='p-4 cursor-pointer text-white bg-red-500 trans hover:bg-white/10 rounded-full'>
                                     <PiPhoneDisconnectFill />
                                 </div>
                                 <div className='p-4 cursor-pointer trans hover:bg-white/10 rounded-full'>
@@ -306,7 +316,7 @@ const Room = () => {
                             </div>
                             <div id="stream-container" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }} className='grid h-full overflow-auto trans p-8 grid-rows-auto gap-8  w-full'>
                                 <video id="localVideo" autoPlay playsInline controls={false} className={`w-full ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[315px]"} trans object-cover bg-black/50 rounded-xl`}></video>
-            
+
                             </div>
                         </div>
 

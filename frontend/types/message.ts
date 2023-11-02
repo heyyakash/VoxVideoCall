@@ -1,5 +1,5 @@
 export interface message{
-    event : 'send-message' | 'ice-candidates' | 'send-offer' | 'send-answer' | 'join-room' | 'user-left',
+    event : 'send-message' | 'ice-candidates' | 'send-offer' | 'send-answer' | 'join-room' | 'left-room',
     message : string,
     email: string,
     roomid:string

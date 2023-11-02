@@ -6,6 +6,7 @@ import Message from './Message'
 import { message } from '@/types/message'
 import { BsChatFill, BsChatLeftFill } from 'react-icons/bs'
 import { userDetails } from '@/types/userDetails'
+import Loading from './Loading'
 
 interface props {
   connection: WebSocket | undefined
@@ -29,6 +30,7 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
       router.push('/login')
     }
     setUser(data.message)
+    setLoading(false)
   }
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
@@ -60,7 +62,9 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
   }
 
 
-
+  if(loading){
+    return <Loading  />
+  }
   return (
     <div className="h-full w-full flex flex-col bg-black/20 rounded-lg">
       <div className='w-full p-5 h-[100px] border-b border-b-black flex items-center'>
