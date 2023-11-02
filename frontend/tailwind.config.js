@@ -13,7 +13,8 @@ module.exports = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       fontFamily:{
-        'm':'Montserrat'
+        'm':'Montserrat',
+        'logo':'Pacifico'
       },
       backgroundColor:{
         'prim':"#252525",

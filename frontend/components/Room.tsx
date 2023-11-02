@@ -9,6 +9,7 @@ import { copyRoomId } from '@/helpers/clipboard'
 import { useRouter } from 'next/router'
 import { getStream } from '@/helpers/webrtc'
 import { handleWebSocketConnectionOnOpen } from '@/helpers/websocket'
+import Logo from './Logo'
 
 
 const Room = () => {
@@ -255,6 +256,9 @@ const Room = () => {
             <>
                 <div className='h-[100vh] bg-prim/75 backdrop-blur-[100px] flex'>
                     <div className='w-[100px] relative flex flex-center bg-black/40 '>
+                        <div className='absolute top-0 left-0 w-full h-[100px] flex flex-center'>
+                            <Logo version = "lite" />
+                        </div>
                         <div className='flex text-2xl text-prim w-full flex-col gap-4'>
                             <div className='flex-center w-full h-[50px] border-r-2 border-r-sec'>
                                 <MdHomeFilled className='text-sec cursor-pointer' />
@@ -301,7 +305,7 @@ const Room = () => {
                                 </div>
                             </div>
                             <div id="stream-container" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }} className='grid h-full overflow-auto trans p-8 grid-rows-auto gap-8  w-full'>
-                                <video id="localVideo" autoPlay playsInline controls={false} className={`w-full ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[400px]"} trans object-cover bg-black/50 rounded-xl`}></video>
+                                <video id="localVideo" autoPlay playsInline controls={false} className={`w-full ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[315px]"} trans object-cover bg-black/50 rounded-xl`}></video>
             
                             </div>
                         </div>

@@ -70,7 +70,7 @@ const Profile = () => {
                     <h2>/</h2>
                     <div className=' w-full p-4'>
                         <input type="text" value = {roomId} onChange={(e)=>setRoomId(e.target.value)} placeholder='Room Id' className='input-primary' />
-                        <button onClick={()=>joinRoom()} className='w-full p-4 text-lg font-bold mt-3 bg-[#FA7268]  '>Join</button>
+                        <button onClick={()=>joinRoom()} className='w-full p-4 text-lg rounded-lg font-bold mt-3 bg-[#FA7268]  '>Join</button>
                     </div>
                 </div>
             </div>
