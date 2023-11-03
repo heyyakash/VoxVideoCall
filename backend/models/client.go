@@ -15,12 +15,15 @@ import (
 
 type Event struct {
 	Event         string      `json:"event"`
+	Name          string      `json:"name"`
+	Image         string      `json:"image"`
 	Email         string      `json:"email"`
 	RoomId        string      `json::"roomid"`
 	Message       string      `json:"message"`
 	RTCOffer      interface{} `json:"rtcoffer"`
-	IceCandidates interface{} `json:icecandidates`
-	RTCAnswer     interface{} `json:rtcanswer`
+	IceCandidates interface{} `json:"icecandidates"`
+	RTCAnswer     interface{} `json:"rtcanswer"`
+	To            interface{} `json:"to"`
 }
 
 type Client struct {
@@ -40,21 +43,38 @@ func (c *Client) ReadMessage() {
 		var msg Event
 		if err := c.Conn.ReadJSON(&msg); err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				leaveMsg := Event{
+					Email:   c.Email,
+					Event:   "left-room",
+					RoomId:  c.RoomId,
+					Message: c.Email + " left the room",
+				}
+				for _, peers := range RoomManager.rooms[c.RoomId] {
+					peers.Channel <- leaveMsg
+				}
 				log.Print(c.Email, " Left")
 			}
 			break
 		}
-		// log.Print(len())
+
 		if msg.Event == "join-room" {
 			c.Email = msg.Email
 			c.RoomId = msg.RoomId
 			RoomManager.InsertIntoRoom(msg.RoomId, c)
 			for _, peers := range RoomManager.rooms[msg.RoomId] {
-				peers.Channel <- msg
+				if peers.Email != msg.Email {
+					peers.Channel <- msg
+				}
 			}
 		} else if msg.Event == "send-message" {
 			for _, peers := range RoomManager.rooms[msg.RoomId] {
 				peers.Channel <- msg
+			}
+		} else if msg.Event == "send-offer" || msg.Event == "ice-candidates" || msg.Event == "send-answer" {
+			for _, peers := range RoomManager.rooms[msg.RoomId] {
+				if peers.Email == msg.To {
+					peers.Channel <- msg
+				}
 			}
 		} else {
 			for _, peers := range RoomManager.rooms[msg.RoomId] {
@@ -81,7 +101,6 @@ func (c *Client) WriteMessage() {
 				}
 				return
 			}
-			log.Println(evnt.Message)
 			c.Conn.WriteJSON(gin.H{"message": evnt})
 		}
 	}

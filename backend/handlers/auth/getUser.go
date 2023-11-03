@@ -1,12 +1,21 @@
 package auth
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"videocallapp/configs"
 	"videocallapp/helpers"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
 )
+
+type details struct {
+	Email string `json:"email"`
+	Name  string `json:"name"`
+	Image string `json:"image"`
+}
 
 func GetUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -21,12 +30,16 @@ func GetUser() gin.HandlerFunc {
 			log.Fatal(err)
 		}
 
+		var detail details
+
+		if err := configs.Collection.FindOne(context.TODO(), bson.D{{"email", user}}).Decode(&detail); err != nil {
+			ctx.JSON(http.StatusUnauthorized, helpers.GenerateResponse("Invalid Credentials", false))
+			return
+		}
+
 		// log.Print(user)
 
-		ctx.JSON(200, gin.H{"message": user, "success": true})
-		// jwt := ctx.Request.Header["auth-token"]
-		// log.Print(jwt)
-		// ctx.JSON(200, helpers.GenerateResponse("Checked", true))
+		ctx.JSON(200, gin.H{"message": detail, "success": true})
 
 	}
 }
