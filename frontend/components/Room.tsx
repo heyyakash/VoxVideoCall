@@ -10,9 +10,21 @@ import { useRouter } from 'next/router'
 import { getStream } from '@/helpers/webrtc'
 import { handleWebSocketConnectionOnOpen } from '@/helpers/websocket'
 import Logo from './Logo'
+import { userDetails } from '@/types/userDetails'
+import VideoElement from './VideoElement'
 
+interface props {
+    user: userDetails
+}
 
-const Room = () => {
+interface remoteStream {
+    image: string
+    email: string
+    name: string
+    stream: MediaStream
+}
+
+const Room: React.FC<props> = ({ user }) => {
     const [copied, setCopied] = useState(false)
     const [active, setActive] = useState(false)
     const arr = [1]
@@ -24,6 +36,7 @@ const Room = () => {
     const router = useRouter()
     const stream = useRef<MediaStream>()
     const peers: { [key: string]: RTCPeerConnection } = {}
+    const [remoteStream, setRemoteStream] = useState<remoteStream[]>([])
 
     //function to end call
     const endCall = () => {
@@ -56,7 +69,7 @@ const Room = () => {
             const connection = new WebSocket('ws://localhost:5000/room/join')
             connection.onopen = async () => {
                 console.log("Connection Established")
-                handleWebSocketConnectionOnOpen(connection, email, room as string)
+                handleWebSocketConnectionOnOpen(connection, email, room as string, user?.image, user?.name)
                 stream.current = await getStream()
                 const localVideo: HTMLVideoElement | null = document.querySelector("video#localVideo")
                 if (localVideo && stream.current) {
@@ -129,12 +142,15 @@ const Room = () => {
     //hander new user 
     const handleNewUser = async (e: message) => {
         console.log("New user joined")
-        peers[e.email] = createPeer(e.email)
-        if (stream?.current) {
-            console.log("Adding stream to offer")
-            stream.current.getTracks().forEach((track) => {
-                peers[e.email].addTrack(track, stream.current as MediaStream)
-            })
+        if (e.image && e.name) {
+            peers[e.email] = createPeer(e.email, e.image, e.name)
+            if (stream?.current) {
+                console.log("Adding stream to offer")
+                stream.current.getTracks().forEach((track) => {
+                    peers[e.email].addTrack(track, stream.current as MediaStream)
+                })
+            }
+
         }
 
     }
@@ -143,7 +159,8 @@ const Room = () => {
     const handleOffer = async (e: message) => {
         if (e.rtcoffer) {
             console.log("Received new offer ! Creating Answer")
-            const peer = createPeer(e.email)
+            if(!e.image || !e.name) return
+            const peer = createPeer(e.email, e.image, e.name)
             try {
                 await peer.setRemoteDescription(new RTCSessionDescription(e.rtcoffer))
             } catch (err) {
@@ -198,7 +215,7 @@ const Room = () => {
 
 
     // function to create new RTC Peer connection
-    const createPeer = (email: string) => {
+    const createPeer = (email: string, image: string, name: string) => {
         const newPeer = new RTCPeerConnection({
             iceServers: [{
                 urls: "stun:stun.l.google.com:19302"
@@ -217,7 +234,9 @@ const Room = () => {
                         message: "Sending Offer",
                         event: "send-offer",
                         rtcoffer: newPeer.localDescription,
-                        to: email
+                        to: email,
+                        name: user?.name,
+                        image: user?.image
                     }
                     conn.current.send(JSON.stringify(payload))
                     console.log("Offer sent")
@@ -242,18 +261,21 @@ const Room = () => {
         }
         newPeer.ontrack = async (e: RTCTrackEvent) => {
             const streamContainer: HTMLDivElement | null = document.querySelector('#stream-container');
-            const existingVideoELement: HTMLElement | null = document.getElementById(`${email}`)
-            if (existingVideoELement) existingVideoELement.remove()
+            const stream: remoteStream = {
+                name,
+                image,
+                email,
+                stream: e.streams[0]
+            }
+            let arr = remoteStream.filter((x) => x.email !== email)
+            setRemoteStream(arr)
+            setRemoteStream((remoteStream) => [...remoteStream, stream])
             if (streamContainer) {
                 console.log("Adding remote video", e.streams[0])
-                const videoElement = document.createElement('video');
-                videoElement.id = email;
-                videoElement.className = 'w-full ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[400px]"} trans object-cover bg-black/50 rounded-xl';
-                videoElement.autoplay = true;
-                videoElement.playsInline = true;
-                videoElement.controls = false;
-                videoElement.srcObject = e.streams[0]
-                streamContainer.appendChild(videoElement)
+                const existingVideoELement: HTMLElement | null = document.getElementById(`${email}-video`)
+                if (existingVideoELement && 'srcObject' in existingVideoELement) {
+                    existingVideoELement.srcObject = e.streams[0]
+                }
 
             }
         }
@@ -315,7 +337,19 @@ const Room = () => {
                                 </div>
                             </div>
                             <div id="stream-container" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }} className='grid h-full overflow-auto trans p-8 grid-rows-auto gap-8  w-full'>
-                                <video id="localVideo" autoPlay playsInline controls={false} className={`w-full ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[315px]"} trans object-cover bg-black/50 rounded-xl`}></video>
+                                <div className={`w-full relative overflow-hidden ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[315px]"} trans object-cover bg-black/50 rounded-xl`}>
+                                    <div className='absolute inset-0 bg-gradient-to-t from-black/70 flex items-end gap-3 via-transparent p-3 to-transparent'>
+                                        <img src={user?.image} className='rounded-full border-2 border-red-400 w-10 h-10 object-cover' alt="" />
+                                        <p className='mb-[.5rem]'>{user?.name}</p>
+                                    </div>
+                                    <video id="localVideo" className='w-full h-full object-cover' autoPlay playsInline controls={false} ></video>
+                                </div>
+
+                                {remoteStream.map((x, i) => {
+                                    return (
+                                        <VideoElement key={i} email={x.email} image={x.image} name={x.name} stream={x.stream} cols={cols} />
+                                    )
+                                })}
 
                             </div>
                         </div>

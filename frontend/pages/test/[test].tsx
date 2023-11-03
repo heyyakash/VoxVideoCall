@@ -1,8 +1,32 @@
+import { getUser } from '@/api/user'
+import Loading from '@/components/Loading'
 import Room from '@/components/Room'
-import React from 'react'
+import { message } from '@/types/message'
+import { userDetails } from '@/types/userDetails'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 
 const Test = () => {
-  return <Room />
+  const [loading,setLoading] = useState(true)
+  const router = useRouter()
+  const [data,setData] = useState<userDetails| null>(null)
+  const getUserDetails = async () => {
+    const d = await getUser()
+    if (!d.success) router.push('/login')
+    else{
+      setData(d.message)
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getUserDetails()
+  }, [])
+
+  if (loading) {
+    return <Loading />
+  }
+  return data && <Room user = {data} />
 }
 
 export default Test
