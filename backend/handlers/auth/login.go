@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"videocallapp/configs"
@@ -100,7 +101,8 @@ func LoginUsingGoogle() gin.HandlerFunc {
 
 		//success response
 		ctx.SetCookie("auth", token, 3600, "/", "localhost", false, true)
-		ctx.Redirect(http.StatusTemporaryRedirect, pathToUrl)
+		log.Println(pathToUrl)
+		ctx.Redirect(http.StatusTemporaryRedirect, fmt.Sprint(helpers.LoadConnectionString("CLIENT_ORIGIN"), pathToUrl))
 
 	}
 }
