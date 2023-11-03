@@ -1,4 +1,4 @@
-import { getUser } from '@/api/user'
+import { LogOut, getUser } from '@/api/user'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { FiLogOut } from 'react-icons/fi'
@@ -29,8 +29,9 @@ const Profile = () => {
     }, [])
 
 
-    const signOut = () => {
+    const signOut = async () => {
         localStorage.removeItem("vox_user")
+        await LogOut()
         router.push('/login')
     }
 

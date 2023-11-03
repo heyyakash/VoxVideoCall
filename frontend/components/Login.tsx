@@ -6,6 +6,8 @@ import { AiFillApple, AiOutlineArrowRight, AiOutlineGoogle, AiOutlineUser } from
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { FcPortraitMode } from 'react-icons/fc'
 import { MdOutlineAlternateEmail } from 'react-icons/md'
+import Link from 'next/link'
+import { getGoogleUrl } from '@/helpers/googleOAuth'
 
 const Login = () => {
   const [name, setName] = useState("")
@@ -14,6 +16,9 @@ const Login = () => {
   const [password, setPassword] = useState("")
   const router = useRouter()
   const [mode, setMode] = useState<'login' | 'signup'>("login")
+
+  const from = (router.query.from as string) || router.pathname || '/';
+  console.log(from)
 
   const isValidURL = (url: string) => {
     const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
@@ -88,11 +93,11 @@ const Login = () => {
         </form>
         <p className='mt-5 cursor-pointer'>Have an account already ?<span onClick={() => setMode(mode === "login" ? "signup" : "login")} className='text-blue-600'>{mode === "login" ? "Sign up" : "Sign in"}</span></p>
         <div className='flex mt-12 gap-6 itemse-center'>
-          <div className='oauthbox'>
+          <Link href = {getGoogleUrl(from)} className='oauthbox'>
             <AiOutlineGoogle className='text-3xl' />
             <p className='mt-4'>Sign up</p>
             <h5 className='font-[600]'>with Google</h5>
-          </div>
+          </Link>
           <div className='oauthbox'>
             <AiFillApple className='text-3xl' />
             <p className='mt-4'>Sign up</p>

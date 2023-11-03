@@ -62,7 +62,7 @@ const Room: React.FC<props> = ({ user }) => {
         const { test: room } = router.query
         const email = localStorage.getItem("vox_email") as string
         roomIdRef.current = room as string
-        emailRef.current = email
+        emailRef.current = user.email
 
         if (room !== undefined && room !== null) {
 

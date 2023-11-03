@@ -37,3 +37,10 @@ export const getUser = async () => {
     const res = await result.json()
     return res
 }
+
+export const LogOut = async () => {
+    await fetch(`${host}/logout`,{
+        method:"POST",
+        credentials:"include"
+    })
+}
