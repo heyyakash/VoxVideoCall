@@ -133,10 +133,12 @@ const Room: React.FC<props> = ({ user }) => {
 
     //handle user leaving room 
     const handleUserLeft = async (e: message) => {
-        const video = document.getElementById(`${e.email}`)
-        if (video) {
-            video.remove()
-        }
+        const arr = remoteStream.filter(x=>x.email!==e.email)
+        setRemoteStream(arr)
+        // const video = document.getElementById(`${e.email}`)
+        // if (video) {
+        //     video.remove()
+        // }
     }
 
     //hander new user 
