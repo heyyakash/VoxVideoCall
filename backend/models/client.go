@@ -61,6 +61,7 @@ func (c *Client) ReadMessage() {
 			c.Email = msg.Email
 			c.RoomId = msg.RoomId
 			RoomManager.InsertIntoRoom(msg.RoomId, c)
+			log.Println(c.Email, " joined")
 			for _, peers := range RoomManager.rooms[msg.RoomId] {
 				if peers.Email != msg.Email {
 					peers.Channel <- msg
