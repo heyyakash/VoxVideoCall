@@ -16,7 +16,7 @@ const Profile = () => {
     const createRoom = async () => {
         try {
             setCreating(true)
-            const data = await fetch("http://localhost:5000/room/create")
+            const data = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL+"/room/create")
             const res = await data.json()
             if (res.success) {
                 router.push(`/test/${res.message}`)
