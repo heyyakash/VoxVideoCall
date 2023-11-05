@@ -66,7 +66,7 @@ const Room: React.FC<props> = ({ user }) => {
 
         if (room !== undefined && room !== null) {
 
-            const connection = new WebSocket('ws://localhost:5000/room/join')
+            const connection = new WebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL as string)
             connection.onopen = async () => {
                 console.log("Connection Established")
                 handleWebSocketConnectionOnOpen(connection, user.email, room as string, user?.image, user?.name)
