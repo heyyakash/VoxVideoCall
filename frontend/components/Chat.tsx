@@ -36,7 +36,6 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if(msg.length===0) return
-    console.log("clicked")
     const {test:room} = router.query
 
     if(connection && user){
@@ -49,10 +48,8 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
         name:user?.name,
         image: user?.image
       }
-      console.log(Event)
       try{
         connection.send(JSON.stringify(Event))
-        console.log("sent") 
         setMsg("")
       }catch(err){
         console.log(err)

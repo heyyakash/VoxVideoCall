@@ -4,14 +4,18 @@ import React, { useEffect, useState } from 'react'
 import { FiLogOut } from 'react-icons/fi'
 import Loading from './Loading'
 import { userDetails } from '@/types/userDetails'
+import { errorImageHandler } from '@/helpers/profileImageErrorHandler'
 
 const Profile = () => {
     const router = useRouter()
+    const [creating,setCreating] = useState(false)
+    const [connecting,setConnecting] = useState(false)
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState<userDetails | null>(null)
     const [roomId, setRoomId] = useState("")
     const createRoom = async () => {
         try {
+            setCreating(true)
             const data = await fetch("http://localhost:5000/room/create")
             const res = await data.json()
             if (res.success) {
@@ -19,13 +23,14 @@ const Profile = () => {
             }
         } catch (error) {
             console.log(error)
+            setCreating(false)
         }
     }
 
     useEffect(() => {
 
         getUserDetails()
-
+        // getAwailableDevices()
     }, [])
 
 
@@ -35,18 +40,20 @@ const Profile = () => {
         router.push('/login')
     }
 
+
+
     const getUserDetails = async () => {
         const data = await getUser()
         if (!data.success) {
             router.push('/login')
             return
         }
-        console.log(data.message)
         setUser(data.message)
         setLoading(false)
     }
 
     const joinRoom = () => {
+        setConnecting(true)
         if (roomId.length !== 0) {
             router.push(`test/${roomId}`)
         }
@@ -59,7 +66,7 @@ const Profile = () => {
         <section className='min-h-[100vh] relative bg-[url("/bg5.svg")] bg-cover'>
             <div className="absolute top-3 z-[100] right-3 p-2 flex gap-2">
                 <div className='rounded-lg bg-white text-black flex items-center gap-3 p-3 padding text-sm font-semibold'>
-                    <img className='w-7 h-7 rounded-full' src={user?.image} alt="photo" />
+                    <img onError={(e)=>errorImageHandler(e)} className='w-7 h-7 rounded-full' src={user?.image} alt="photo" />
                     {user?.name}
                 </div>
                 <button onClick={() => signOut()} className='bg-red-500 trans rounded-lg font-bold cursor-pointer px-6 text-sm'>
@@ -75,12 +82,12 @@ const Profile = () => {
 
 
                     <div className=' w-full p-4'>
-                        <button onClick={() => createRoom()} className='w-full p-4 text-lg font-bold mt-3 bg-[#FA7268] rounded-lg'>Create</button>
+                        <button onClick={() => createRoom()} className='btn-primary' disabled = {creating}>{creating ?<img src = "/loading.gif" height={30} width={30}/>:"Create"}</button>
                     </div>
                     <h2>/</h2>
                     <div className=' w-full p-4'>
                         <input type="text" value={roomId} onChange={(e) => setRoomId(e.target.value)} placeholder='Room Id' className='input-primary' />
-                        <button onClick={() => joinRoom()} className='w-full p-4 text-lg rounded-lg font-bold mt-3 bg-[#FA7268]  '>Join</button>
+                        <button onClick={() => joinRoom()} className='btn-primary' disabled = {connecting}>{connecting ?<img src = "/loading.gif" height={30} width={30}/>:"Create"}</button>
                     </div>
                 </div>
             </div>

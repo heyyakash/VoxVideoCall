@@ -73,5 +73,8 @@
   .oauthbox{
     @apply min-w-[160px] flex flex-col bg-gray-400/20 p-5 trans hover:bg-gray-400/30 cursor-pointer rounded-xl;
   }
+  .btn-primary{
+    @apply w-full p-4 text-lg font-bold flex flex-center mt-3 bg-[#FA7268] rounded-lg disabled:opacity-50
+  }
 }
 

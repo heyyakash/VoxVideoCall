@@ -18,7 +18,6 @@ const Login = () => {
   const [mode, setMode] = useState<'login' | 'signup'>("login")
 
   const from = (router.query.from as string) || router.pathname || '/';
-  console.log(from)
 
   const isValidURL = (url: string) => {
     const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;

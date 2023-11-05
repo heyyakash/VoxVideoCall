@@ -1,5 +1,6 @@
 import { getUser } from '@/api/user'
 import Loading from '@/components/Loading'
+import NOSSRWrapper from '@/components/NOSSRWrapper'
 import Room from '@/components/Room'
 import { message } from '@/types/message'
 import { userDetails } from '@/types/userDetails'
@@ -15,6 +16,7 @@ const Test = () => {
     if (!d.success) router.push('/login')
     else{
       setData(d.message)
+      console.log(d.message)
       setLoading(false)
     }
   }
@@ -26,7 +28,7 @@ const Test = () => {
   if (loading) {
     return <Loading />
   }
-  return data && <Room user = {data} />
+  return data && <NOSSRWrapper><Room user = {data} /></NOSSRWrapper>
 }
 
 export default Test
