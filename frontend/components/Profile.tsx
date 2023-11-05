@@ -63,9 +63,9 @@ const Profile = () => {
         return <Loading />
     }
     return (
-        <section className='min-h-[100vh] relative bg-[url("/bg5.svg")] bg-cover'>
-            <div className="absolute top-3 z-[100] right-3 p-2 flex gap-2">
-                <div className='rounded-lg bg-white text-black flex items-center gap-3 p-3 padding text-sm font-semibold'>
+        <section className='min-h-[100vh] relative bg-[url("/bg5-mob.svg")] lg:bg-[url("/bg5.svg")] bg-cover bg-no-repeat '>
+            <div className="absolute top-1 md:top-3 z-[100] w-full md:w-[auto] md:right-3 p-4 md:p-2 flex gap-2">
+                <div className='rounded-lg bg-white w-full text-black flex items-center gap-3 p-3 padding text-sm font-semibold'>
                     <img onError={(e)=>errorImageHandler(e)} className='w-7 h-7 rounded-full' src={user?.image} alt="photo" />
                     {user?.name}
                 </div>
@@ -75,10 +75,10 @@ const Profile = () => {
             </div>
             <div className=' absolute inset-0 z-10 flex-center flex-col gap-[2rem]'>
                 <div className='flex-center flex-col'>
-                    <h1>Start a Video Call</h1>
+                    <h1 className='text-3xl md:text-[3.5rem] md:font-[700] mb-4'>Start a Video Call</h1>
                     <p className='w-[60%] text-center font-semibold text-gray-300'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam reiciendis adipisci sit quam deserunt. Adipisci?</p>
                 </div>
-                <div className='max-w-[900px] w-full flex-center gap-5'>
+                <div className='max-w-[900px] w-full flex flex-col items-center justify-center md:flex-row md:flex-center gap-5'>
 
 
                     <div className=' w-full p-4'>
@@ -87,7 +87,7 @@ const Profile = () => {
                     <h2>/</h2>
                     <div className=' w-full p-4'>
                         <input type="text" value={roomId} onChange={(e) => setRoomId(e.target.value)} placeholder='Room Id' className='input-primary' />
-                        <button onClick={() => joinRoom()} className='btn-primary' disabled = {connecting}>{connecting ?<img src = "/loading.gif" height={30} width={30}/>:"Create"}</button>
+                        <button onClick={() => joinRoom()} className='btn-primary' disabled = {connecting}>{connecting ?<img src = "/loading.gif" height={30} width={30}/>:"Join"}</button>
                     </div>
                 </div>
             </div>

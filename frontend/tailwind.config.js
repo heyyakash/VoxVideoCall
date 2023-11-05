@@ -17,7 +17,7 @@ module.exports = {
         'logo':'Pacifico'
       },
       backgroundColor:{
-        'prim':"#252525",
+        'prim':"#001220",
         'sec':'#FA7268',
         'tert':"#C62368"
       },

@@ -51,23 +51,23 @@ const Login = () => {
 
 
   return (
-    <section className='min-h-[100vh] relative bg-[url("/bg6.svg")] bg-opacity-10 bg-cover'>
+    <section className='min-h-[100vh] w-full relative bg-[url("/bg6.svg")] bg-opacity-10 bg-cover'>
 
       <div className=' absolute inset-0 z-10 flex-center backdrop-blur-[30px] bg-black/40 flex-col gap-[2rem]'></div>
 
-      <div className='w-full h-full flex flex-col items-center relative  z-10 py-[4rem]' >
+      <div className='w-full h-full flex flex-col items-center relative  text-center  z-10 py-[4rem]' >
         <Logo />
-        <h1>{mode === "login" ? "Login to your account" : "Create Account"}</h1>
-        <p>Create an account to have high quality video calls</p>
+        <h1 className='text-4xl my-4'>{mode === "login" ? "Login to your account" : "Create Account"}</h1>
+        <p >Create an account to have high quality video calls</p>
         <form onSubmit={mode === "login" ? (e) => handleLogin(e) : (e) => handleSignUp(e)} autoComplete='off' className='flex flex-col gap-6 mt-12 items-center'>
           {mode === "signup" ? (
-            <div className="flex gap-6">
+            <div className="flex flex-col lg:flex-row gap-6">
 
-              <div className='rounded-[12px] border-2 border-white/20 self-center w-[380px] flex items-center gap-3 p-5 text-white/50 font-[600]'>
+              <div className='input-container'>
                 <AiOutlineUser className='text-xl' />
                 <input value={name}  onChange={(e) => setName(e.target.value)} required type="text" className='input-sec' placeholder=' Name' />
               </div>
-              <div className='rounded-[12px] border-2 border-white/20 w-[380px] flex items-center gap-3 p-5 text-white/50 font-[600]'>
+              <div className='input-container'>
                 <FcPortraitMode className='text-xl' />
                 <input value={image}  onChange={(e) => setImage(e.target.value)} required type="text" className='input-sec' placeholder='Image link' />
               </div>
@@ -75,13 +75,13 @@ const Login = () => {
 
             </div>
           ) : (<></>)}
-          <div className="flex gap-6">
+          <div className="flex flex-col lg:flex-row items-center gap-6">
 
-            <div className='rounded-[12px] border-2 border-white/20 self-center w-[380px] flex items-center gap-3 p-5 text-white/50 font-[600]'>
+            <div className='input-container'>
               <MdOutlineAlternateEmail className='text-xl' />
               <input  value={email} onChange={(e) => setEmail(e.target.value)} required type="email" className='input-sec' placeholder='Email' />
             </div>
-            <div className='rounded-[12px] border-2 border-white/20 w-[380px] flex items-center gap-3 p-5 text-white/50 font-[600]'>
+            <div className='input-container'>
               <RiLockPasswordLine className='text-xl' />
               <input  value={password} onChange={(e) => setPassword(e.target.value)} required type="password" className='input-sec' placeholder='Password' />
             </div>
@@ -91,17 +91,17 @@ const Login = () => {
           {mode === "signup" ? (<button type='submit' className='rounded-full bg-blue-600 text-xl  grid place-items-center h-[65px] w-[65px]'><AiOutlineArrowRight /></button>) : (<></>)}
         </form>
         <p className='mt-5 cursor-pointer'>Have an account already ?<span onClick={() => setMode(mode === "login" ? "signup" : "login")} className='text-blue-600'>{mode === "login" ? "Sign up" : "Sign in"}</span></p>
-        <div className='flex mt-12 gap-6 itemse-center'>
+        <div className='flex mt-12 gap-6 itemse-center text-start'>
           <Link href = {getGoogleUrl(from)} className='oauthbox'>
             <AiOutlineGoogle className='text-3xl' />
             <p className='mt-4'>Sign up</p>
             <h5 className='font-[600]'>with Google</h5>
           </Link>
-          <div className='oauthbox'>
+          {/* <div className='oauthbox'>
             <AiFillApple className='text-3xl' />
             <p className='mt-4'>Sign up</p>
             <h5 className='font-[600]'>with Apple ID</h5>
-          </div>
+          </div> */}
         </div>
       </div>
 

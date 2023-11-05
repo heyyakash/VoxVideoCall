@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { MdHomeFilled } from 'react-icons/md'
 import { IoMdSettings } from 'react-icons/io'
-import { BsFillCameraVideoFill, BsFillGrid3X3GapFill, BsFillGridFill, BsFillMicFill, BsFillSquareFill } from 'react-icons/bs'
+import { BsFillCameraVideoFill, BsFillGrid3X3GapFill, BsFillGridFill, BsFillMicFill, BsFillShareFill, BsFillSquareFill } from 'react-icons/bs'
 import { PiPhoneDisconnectFill } from 'react-icons/pi'
 import { message } from '@/types/message'
 import Chat from './Chat'
@@ -69,7 +69,7 @@ const Room: React.FC<props> = ({ user }) => {
             const connection = new WebSocket('ws://localhost:5000/room/join')
             connection.onopen = async () => {
                 console.log("Connection Established")
-                handleWebSocketConnectionOnOpen(connection, email, room as string, user?.image, user?.name)
+                handleWebSocketConnectionOnOpen(connection, user.email, room as string, user?.image, user?.name)
                 stream.current = await getStream()
                 const localVideo: HTMLVideoElement | null = document.querySelector("video#localVideo")
                 if (localVideo && stream.current) {
@@ -123,6 +123,7 @@ const Room: React.FC<props> = ({ user }) => {
     //handle Incomming ICE Candidates
     const handleIncommingIce = async (e: message) => {
         if (e.icecandidates && peers[e.email]) {
+            console.log("Received ICE")
             try {
                 await peers[e.email].addIceCandidate(e.icecandidates)
             } catch (error) {
@@ -133,12 +134,8 @@ const Room: React.FC<props> = ({ user }) => {
 
     //handle user leaving room 
     const handleUserLeft = async (e: message) => {
-        const arr = remoteStream.filter(x=>x.email!==e.email)
+        const arr = remoteStream.filter(x => x.email !== e.email)
         setRemoteStream(arr)
-        // const video = document.getElementById(`${e.email}`)
-        // if (video) {
-        //     video.remove()
-        // }
     }
 
     //hander new user 
@@ -161,7 +158,7 @@ const Room: React.FC<props> = ({ user }) => {
     const handleOffer = async (e: message) => {
         if (e.rtcoffer) {
             console.log("Received new offer ! Creating Answer")
-            if(!e.image || !e.name) return
+            if (!e.image || !e.name) return
             const peer = createPeer(e.email, e.image, e.name)
             try {
                 await peer.setRemoteDescription(new RTCSessionDescription(e.rtcoffer))
@@ -288,43 +285,38 @@ const Room: React.FC<props> = ({ user }) => {
     if (active)
         return (
             <>
-                <div className='h-[100vh] bg-prim/75 backdrop-blur-[100px] flex'>
-                    <div className='w-[100px] relative flex flex-center bg-black/40 '>
-                        <div className='absolute top-0 left-0 w-full h-[100px] flex flex-center'>
+                <div className='h-[100vh] bg-prim  flex flex-col-reverse md:flex-row'>
+                    <div className='w-full md:w-[100px]  relative flex flex-center bg-black/20 md:bg-white/5 '>
+                        <div className='absolute md:top-0 left-0 hidden  w-full h-[70px] lg:h-[90px] md:flex-center'>
                             <Logo version="lite" />
                         </div>
-                        <div className='flex text-2xl text-prim w-full flex-col gap-4'>
-                            <div className='flex-center w-full h-[50px] border-r-2 border-r-sec'>
-                                <MdHomeFilled className='text-sec cursor-pointer' />
-                            </div>
-                            <div className='flex-center w-full h-[50px]  '>
-                                <IoMdSettings className='cursor-pointer' />
+                        <div className='flex text-lg md:text-2xl text-prim flex-center w-full md:flex-col gap-4'>
+                            <div className=' gap-4 md:gap-6 flex md:w-full md:flex-col flex-center '>
+                                <div className='side-btn text-white border-sec  '>
+                                    <BsFillMicFill />
+                                </div>
+                                <div onClick={() => endCall()} className='p-4 cursor-pointer text-white bg-red-500 trans hover:bg-white/10 rounded-full'>
+                                    <PiPhoneDisconnectFill />
+                                </div>
+                                <div className='side-btn text-white border-sec'>
+                                    <BsFillCameraVideoFill />
+                                </div>
                             </div>
 
                         </div>
                     </div>
 
                     {/* Video  */}
-                    <div className='flex-1 bg-[url("/test-bg.svg")] bg-no-repeat bg-cover'>
-
+                    <div className='flex-1 bg-[url("/bg9.svg")] bg-no-repeat bg-cover '>
+                    
                         {/* Header */}
-                        <div className='w-full flex relative flex-col h-full backdrop-blur-[100px]  bg-prim/90'>
-                            <div className='absolute left-[50%] -translate-x-[50%] h-[60px] gap-4 px-5 py-10 bottom-[2rem] bg-black/80 rounded-xl flex flex-center'>
-                                <div className='p-4 cursor-pointer trans hover:bg-white/10 rounded-full'>
-                                    <BsFillMicFill />
-                                </div>
-                                <div onClick={() => endCall()} className='p-4 cursor-pointer text-white bg-red-500 trans hover:bg-white/10 rounded-full'>
-                                    <PiPhoneDisconnectFill />
-                                </div>
-                                <div className='p-4 cursor-pointer trans hover:bg-white/10 rounded-full'>
-                                    <BsFillCameraVideoFill />
-                                </div>
-                            </div>
-                            <div className='w-full p-10 h-[100px] border-b border-b-black relative flex items-center'>
+                        <div className='w-full flex relative flex-col h-full backdrop-blur-[100px] bg-prim/70'>
 
-                                <h3 className='text-xl font-bold'>{roomIdRef.current}</h3>
-                                <button disabled={copied} onClick={() => copyRoomId(roomIdRef?.current as string, setCopied)} className='bg-sec trans mx-3 px-2 py-[2px] rounded-md font-semibold'>
-                                    {copied ? "Copied" : "Copy"}
+                            <div className='w-full px-6 h-[70px] lg:h-[90px] border-b border-b-black relative flex items-center'>
+
+                                <h3 className='w-[100px] truncate lg:w-auto md:block text-xl font-bold'>{roomIdRef.current}</h3>
+                                <button disabled={copied} onClick={() => copyRoomId(roomIdRef?.current as string, setCopied)} className='bg-sec trans mx-3 p-2 rounded-md font-semibold'>
+                                    {copied ? "Copied" : <BsFillShareFill  />}
                                 </button>
                                 <div className='ml-auto  trans flex items-center gap-4 text-2xl'>
                                     <div onClick={() => setCols(1)} className={`p-2  cursor-pointer ${cols === 1 ? "border-b-2 border-b-sec" : ""}`}>
@@ -339,12 +331,12 @@ const Room: React.FC<props> = ({ user }) => {
                                 </div>
                             </div>
                             <div id="stream-container" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }} className='grid h-full overflow-auto trans p-8 grid-rows-auto gap-8  w-full'>
-                                <div className={`w-full relative overflow-hidden ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[315px]"} trans object-cover bg-black/50 rounded-xl`}>
+                                <div className={`w-full relative  overflow-hidden ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[315px]"} trans object-cover bg-black/50 rounded-xl`}>
                                     <div className='absolute inset-0 bg-gradient-to-t from-black/70 flex items-end gap-3 via-transparent p-3 to-transparent'>
                                         <img src={user?.image} className='rounded-full border-2 border-red-400 w-10 h-10 object-cover' alt="" />
                                         <p className='mb-[.5rem]'>{user?.name}</p>
                                     </div>
-                                    <video id="localVideo" className='w-full h-full object-cover' autoPlay playsInline controls={false} ></video>
+                                    <video id="localVideo" className='w-full  h-full object-cover' autoPlay playsInline controls={false} ></video>
                                 </div>
 
                                 {remoteStream.map((x, i) => {
@@ -361,7 +353,7 @@ const Room: React.FC<props> = ({ user }) => {
                     </div>
 
                     {/* Chat */}
-                    <div className='w-[450px] h-full'>
+                    <div className='w-[450px] hidden xl:block h-full'>
                         <Chat connection={conn.current} chats={chats} setChats={setChats} />
                     </div>
                     <div></div>

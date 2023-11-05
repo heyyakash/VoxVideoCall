@@ -76,5 +76,12 @@
   .btn-primary{
     @apply w-full p-4 text-lg font-bold flex flex-center mt-3 bg-[#FA7268] rounded-lg disabled:opacity-50
   }
+  .side-btn{
+    @apply p-4 cursor-pointer trans text-lg h-full hover:bg-white/10 w-full border-t-2 md:border-r-2 md:border-t-0 grid place-content-center
+  }
+  .input-container{
+    @apply
+    rounded-[12px] border-2 border-white/20 self-center w-[95%] md:w-[380px] flex items-center gap-3 p-5 text-white/50 font-[600]
+  } 
 }
 
