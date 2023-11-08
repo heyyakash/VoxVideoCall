@@ -63,7 +63,7 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
     return <Loading  />
   }
   return (
-    <div className=" h-full w-full flex flex-col bg-white/5 rounded-lg">
+    <div className=" h-full w-full flex flex-col bg-black/50 rounded-lg">
       <div className='w-full p-5 h-[70px] lg:h-[82.4px] border-b border-b-black flex items-center'>
         <BsChatFill className='text-2xl mx-3 text-sec' />
         <div className='ml-auto rounded-full w-[50px] h-[50px] overflow-hidden'>

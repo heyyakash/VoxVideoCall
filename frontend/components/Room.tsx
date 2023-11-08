@@ -286,7 +286,7 @@ const Room: React.FC<props> = ({ user }) => {
         return (
             <>
                 <div className='h-[100vh] bg-prim  flex flex-col-reverse md:flex-row'>
-                    <div className='w-full md:w-[100px]  relative flex flex-center bg-black/20 md:bg-white/5 '>
+                    <div className='w-full md:w-[100px]  relative flex flex-center bg-black/20 md:bg-black/50 '>
                         <div className='absolute md:top-0 left-0 hidden  w-full h-[70px] lg:h-[90px] md:flex-center'>
                             <Logo version="lite" />
                         </div>
