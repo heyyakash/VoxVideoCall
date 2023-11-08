@@ -59,9 +59,9 @@ const Login = () => {
         <Logo />
         <h1 className='text-4xl my-4'>{mode === "login" ? "Login to your account" : "Create Account"}</h1>
         <p >Create an account to have high quality video calls</p>
-        <form onSubmit={mode === "login" ? (e) => handleLogin(e) : (e) => handleSignUp(e)} autoComplete='off' className='flex flex-col gap-6 mt-12 items-center'>
+        <form onSubmit={mode === "login" ? (e) => handleLogin(e) : (e) => handleSignUp(e)} autoComplete='off' className='flex flex-col gap-6 mt-12 w-full items-center'>
           {mode === "signup" ? (
-            <div className="flex flex-col lg:flex-row gap-6">
+            <div className="flex flex-col lg:flex-row gap-6 w-full">
 
               <div className='input-container'>
                 <AiOutlineUser className='text-xl' />
@@ -75,7 +75,7 @@ const Login = () => {
 
             </div>
           ) : (<></>)}
-          <div className="flex flex-col lg:flex-row items-center gap-6">
+          <div className="flex flex-col lg:flex-row items-center gap-6 w-full">
 
             <div className='input-container'>
               <MdOutlineAlternateEmail className='text-xl' />
