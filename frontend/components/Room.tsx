@@ -285,8 +285,8 @@ const Room: React.FC<props> = ({ user }) => {
     if (active)
         return (
             <>
-                <div className='h-[100vh] bg-prim  flex flex-col-reverse md:flex-row'>
-                    <div className='w-full md:w-[100px]  relative flex flex-center bg-black/20 md:bg-black/50 '>
+                <div className='h-[100vh] bg-prim flex flex-col-reverse md:flex-row'>
+                    <div className='w-full md:w-[100px] fixed bottom-0 z-[1000] md:relative flex flex-center bg-black/50 '>
                         <div className='absolute md:top-0 left-0 hidden  w-full h-[70px] lg:h-[90px] md:flex-center'>
                             <Logo version="lite" />
                         </div>
@@ -307,7 +307,7 @@ const Room: React.FC<props> = ({ user }) => {
                     </div>
 
                     {/* Video  */}
-                    <div className='flex-1 bg-[url("/bg9.svg")] bg-no-repeat bg-cover '>
+                    <div className='flex-1 bg-[url("/bg9.svg")] bg-no-repeat bg-cover overflow-auto '>
                     
                         {/* Header */}
                         <div className='w-full flex relative flex-col h-full backdrop-blur-[100px] bg-prim/70'>
@@ -330,14 +330,16 @@ const Room: React.FC<props> = ({ user }) => {
                                     </div>
                                 </div>
                             </div>
-                            <div id="stream-container" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }} className='grid h-full overflow-auto trans p-8 grid-rows-auto gap-8  w-full'>
-                                <div className={`w-full relative  overflow-hidden ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[315px]"} trans object-cover bg-black/50 rounded-xl`}>
-                                    <div className='absolute inset-0 bg-gradient-to-t from-black/70 flex items-end gap-3 via-transparent p-3 to-transparent'>
+                            {/* style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }} */}
+                            <div id="stream-container" className='grid h-full overflow-auto trans p-8 grid-rows-auto grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8  w-full'>
+                                <div className={`w-full relative  overflow-hidden ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[315px]"} trans  object-cover bg-black/50 rounded-xl`}>
+                                    <div className='absolute inset-0 bg-gradient-to-t from-black/70 flex items-end gap-3 via-transparent p-3 to-transparent w-full'>
                                         <img src={user?.image} className='rounded-full border-2 border-red-400 w-10 h-10 object-cover' alt="" />
                                         <p className='mb-[.5rem]'>{user?.name}</p>
                                     </div>
                                     <video id="localVideo" className='w-full  h-full object-cover' autoPlay playsInline controls={false} ></video>
                                 </div>
+
 
                                 {remoteStream.map((x, i) => {
                                     return (
