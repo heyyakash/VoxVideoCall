@@ -97,11 +97,6 @@ const Login = () => {
             <p className='mt-4'>Sign up</p>
             <h5 className='font-[600]'>with Google</h5>
           </Link>
-          {/* <div className='oauthbox'>
-            <AiFillApple className='text-3xl' />
-            <p className='mt-4'>Sign up</p>
-            <h5 className='font-[600]'>with Apple ID</h5>
-          </div> */}
         </div>
       </div>
 

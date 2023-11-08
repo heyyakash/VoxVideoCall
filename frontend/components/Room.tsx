@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { MdHomeFilled } from 'react-icons/md'
-import { IoMdSettings } from 'react-icons/io'
+
 import { BsFillCameraVideoFill, BsFillGrid3X3GapFill, BsFillGridFill, BsFillMicFill, BsFillShareFill, BsFillSquareFill } from 'react-icons/bs'
 import { PiPhoneDisconnectFill } from 'react-icons/pi'
 import { message } from '@/types/message'
@@ -134,8 +133,11 @@ const Room: React.FC<props> = ({ user }) => {
 
     //handle user leaving room 
     const handleUserLeft = async (e: message) => {
-        const arr = remoteStream.filter(x => x.email !== e.email)
-        setRemoteStream(arr)
+        
+        setRemoteStream((remoteStream) => {
+            const arr = remoteStream.filter(x => x.email !== e.email)
+            return arr
+        })
     }
 
     //hander new user 
@@ -266,11 +268,14 @@ const Room: React.FC<props> = ({ user }) => {
                 email,
                 stream: e.streams[0]
             }
-            let arr = remoteStream.filter((x) => x.email !== email)
-            setRemoteStream(arr)
-            setRemoteStream((remoteStream) => [...remoteStream, stream])
+            
+            // setRemoteStream(arr)
+            setRemoteStream((remoteStream) => {
+                const arr = remoteStream.filter(x => x.email !== email)
+                arr.push(stream)
+                return arr
+            })
             if (streamContainer) {
-                console.log("Adding remote video", e.streams[0])
                 const existingVideoELement: HTMLElement | null = document.getElementById(`${email}-video`)
                 if (existingVideoELement && 'srcObject' in existingVideoELement) {
                     existingVideoELement.srcObject = e.streams[0]
