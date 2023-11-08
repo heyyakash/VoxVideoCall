@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 	"videocallapp/configs"
 	"videocallapp/helpers"
 	"videocallapp/models"
@@ -47,9 +48,19 @@ func LoginUser() gin.HandlerFunc {
 			ctx.JSON(500, helpers.GenerateResponse(err.Error(), false))
 			return
 		}
-
+		log.Print(ctx.Request.Host)
+		c := &http.Cookie{
+			Name:     "auth",
+			Path:     "/",
+			Value:    token,
+			Domain:   ctx.Request.Host,
+			Expires:  time.Now().Add(1 * time.Hour),
+			Secure:   true,
+			HttpOnly: true,
+			SameSite: http.SameSiteNoneMode,
+		}
 		//success response
-		ctx.SetCookie("auth", token, 3600, "/", "localhost", false, true)
+		http.SetCookie(ctx.Writer, c)
 		ctx.JSON(200, helpers.GenerateResponse(token, true))
 
 	}

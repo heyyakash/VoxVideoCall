@@ -33,7 +33,7 @@ func main() {
 	routes.UserRouter(r)
 	routes.RoomRoutes(r)
 	configs.ConnectDB()
-	if err := r.RunTLS(":5000", "server.crt", "server.key"); err != nil {
+	if err := r.Run(":5000"); err != nil {
 		log.Fatalf("Could not start the server ", err)
 	}
 }

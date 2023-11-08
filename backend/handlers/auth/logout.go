@@ -2,13 +2,23 @@ package auth
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Logout() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		ctx.SetCookie("auth", "", -1, "/", "localhost", false, true)
+		cookie := &http.Cookie{
+			Name:     "auth",
+			Value:    "",
+			Path:     "/",
+			Domain:   ctx.Request.Host,
+			Expires:  time.Unix(1, 0),
+			HttpOnly: true,
+			Secure:   true,
+		}
+		http.SetCookie(ctx.Writer, cookie)
 		ctx.Redirect(http.StatusSeeOther, "/login")
 	}
 }
