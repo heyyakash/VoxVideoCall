@@ -85,7 +85,7 @@ const Chat: FC<props> = ({ connection, chats, setChats ,setToggleChat}) => {
       </div>
       <form onSubmit={(e)=>sendMessage(e)} className=" w-full mt-auto flex border-t border-white/20">
         <input value = {msg} onChange={(e)=>setMsg(e.target.value)} type="text" placeholder='Enter Your Message' className="w-full h-[50px] p-2 bg-transparent font-semibold text-white outline-none" />
-        <button type="submit" className="w-[55px] grid place-items-center text-xl"><BiSend className='text-sec' /></button>
+        <button type="submit" className={`w-[55px] grid place-items-center text-xl `}><BiSend className='text-sec' /></button>
         {/* <button type = "submit" ><BiSend className='text-sec' /></button> */}
       </form>
     </div>

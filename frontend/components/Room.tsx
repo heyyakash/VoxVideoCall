@@ -324,7 +324,7 @@ const Room: React.FC<props> = ({ user }) => {
 
 
                     {/* Chat */}
-                    <div className={` absolute z-[1000] bg-slate-900 w-full lg:relative lg:bg-transparent xl:block h-full trans ${!toggleChat ? "w-0 hidden lg:w-0 " : "md:w-[450px]"}`}>
+                    <div className={` absolute z-[1000] bg-slate-900 w-full lg:relative lg:bg-transparent  h-full trans ${!toggleChat ? "w-0 hidden z-[-1] lg:flex lg:w-0" : "md:w-[450px]"}`}>
                         <Chat setToggleChat={setToggleChat} connection={conn.current} chats={chats} setChats={setChats} />
                     </div>
 
