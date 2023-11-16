@@ -51,14 +51,14 @@ const Login = () => {
 
 
   return (
-    <section className='min-h-[100vh] w-full relative bg-[url("/bg6.svg")] bg-opacity-10 bg-cover'>
+    <section className='min-h-[100vh] w-full relative bg-[url("/canvas3.jpg")] bg-opacity-10 bg-cover md:bg-contain  bg-no-repeat'>
 
-      <div className=' absolute inset-0 z-10 flex-center backdrop-blur-[30px] bg-black/40 flex-col gap-[2rem]'></div>
+      <div className=' absolute inset-0 z-10 flex-center  bg-black/70 flex-col gap-[2rem]'></div>
 
       <div className='w-full h-full flex flex-col items-center relative  text-center  z-10 py-[4rem]' >
         <Logo />
         <h1 className='text-4xl my-4'>{mode === "login" ? "Login to your account" : "Create Account"}</h1>
-        <p >Create an account to have high quality video calls</p>
+        <p className='text-sm md:text-lg' >Create an account to have high quality video calls</p>
         <form onSubmit={mode === "login" ? (e) => handleLogin(e) : (e) => handleSignUp(e)} autoComplete='off' className='flex flex-col md:w-auto gap-6 mt-12 w-full items-center'>
           {mode === "signup" ? (
             <div className="flex flex-col lg:flex-row gap-6 w-full">

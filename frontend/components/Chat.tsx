@@ -7,17 +7,20 @@ import { message } from '@/types/message'
 import { BsChatFill, BsChatLeftFill } from 'react-icons/bs'
 import { userDetails } from '@/types/userDetails'
 import Loading from './Loading'
+import {IoIosArrowRoundBack} from 'react-icons/io'
 
 interface props {
   connection: WebSocket | undefined
   chats: message[]
   setChats:React.Dispatch<React.SetStateAction<message[]>>
+  setToggleChat:React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Chat: FC<props> = ({ connection, chats, setChats }) => {
+const Chat: FC<props> = ({ connection, chats, setChats ,setToggleChat}) => {
   const [user, setUser] = useState<userDetails | null>(null)
   const [msg, setMsg] = useState("")
   const [loading,setLoading] = useState(true)
+  const [show,setShow] = useState(true)
 
   const router = useRouter()
   useEffect(() => {
@@ -63,10 +66,10 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
     return <Loading  />
   }
   return (
-    <div className=" h-full w-full flex flex-col bg-black/50 rounded-lg">
-      <div className='w-full p-5 h-[70px] lg:h-[82.4px] border-b border-b-black flex items-center'>
-        <BsChatFill className='text-2xl mx-3 text-sec' />
-        <div className='ml-auto rounded-full w-[50px] h-[50px] overflow-hidden'>
+    <div className = {` h-full  flex border-r ${!show?"":"w-full"} border-white/20 flex-col bg-black/20 rounded-lg`}>
+      <div className='w-full px-5 h-[65.2px] border-b border-white/20 flex items-center'>
+        <IoIosArrowRoundBack onClick={()=>setToggleChat(false)} className='text-4xl cursor-pointer trans text-sec' />
+        <div className='ml-auto rounded-full w-[40px] h-[40px] overflow-hidden'>
           <img className='object-cover h-full w-full' src={user?.image} alt="avatar" />
         </div>
       </div>
@@ -80,7 +83,7 @@ const Chat: FC<props> = ({ connection, chats, setChats }) => {
         })
        }
       </div>
-      <form onSubmit={(e)=>sendMessage(e)} className=" w-full mt-auto flex border-t border-t-black">
+      <form onSubmit={(e)=>sendMessage(e)} className=" w-full mt-auto flex border-t border-white/20">
         <input value = {msg} onChange={(e)=>setMsg(e.target.value)} type="text" placeholder='Enter Your Message' className="w-full h-[50px] p-2 bg-transparent font-semibold text-white outline-none" />
         <button type="submit" className="w-[55px] grid place-items-center text-xl"><BiSend className='text-sec' /></button>
         {/* <button type = "submit" ><BiSend className='text-sec' /></button> */}

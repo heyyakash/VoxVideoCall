@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { BsFillCameraVideoFill, BsFillGrid3X3GapFill, BsFillGridFill, BsFillMicFill, BsFillShareFill, BsFillSquareFill } from 'react-icons/bs'
+import { BsChatFill, BsFillCameraVideoFill, BsFillGrid3X3GapFill, BsFillGridFill, BsFillMicFill, BsFillShareFill, BsFillSquareFill } from 'react-icons/bs'
 import { PiPhoneDisconnectFill } from 'react-icons/pi'
 import { message } from '@/types/message'
 import Chat from './Chat'
@@ -36,6 +36,7 @@ const Room: React.FC<props> = ({ user }) => {
     const stream = useRef<MediaStream>()
     const peers: { [key: string]: RTCPeerConnection } = {}
     const [remoteStream, setRemoteStream] = useState<remoteStream[]>([])
+    const [toggleChat, setToggleChat] = useState(true)
 
     //function to end call
     const endCall = () => {
@@ -133,7 +134,7 @@ const Room: React.FC<props> = ({ user }) => {
 
     //handle user leaving room 
     const handleUserLeft = async (e: message) => {
-        
+
         setRemoteStream((remoteStream) => {
             const arr = remoteStream.filter(x => x.email !== e.email)
             return arr
@@ -268,7 +269,7 @@ const Room: React.FC<props> = ({ user }) => {
                 email,
                 stream: e.streams[0]
             }
-            
+
             // setRemoteStream(arr)
             setRemoteStream((remoteStream) => {
                 const arr = remoteStream.filter(x => x.email !== email)
@@ -290,40 +291,58 @@ const Room: React.FC<props> = ({ user }) => {
     if (active)
         return (
             <>
-                <div className='h-[100vh] bg-prim flex flex-col-reverse md:flex-row'>
-                    <div className='w-full md:w-[100px] fixed bottom-0 z-[1000] md:relative flex flex-center bg-black/50 '>
-                        <div className='absolute md:top-0 left-0 hidden  w-full h-[70px] lg:h-[90px] md:flex-center'>
+                <div className='h-[100vh] bg-gradient-to-t from-slate-900/60 to-slate-900 flex flex-col-reverse md:flex-row'>
+
+
+                    {/* sidebar */}
+                    <div className='w-full md:w-[70px] border-r border-white/20 fixed bottom-0 z-[1000] md:relative flex flex-center  '>
+                        <div className='absolute md:top-0 left-0 hidden  w-full h-[70px] md:flex-center'>
                             <Logo version="lite" />
                         </div>
                         <div className='flex text-lg md:text-2xl text-prim flex-center w-full md:flex-col gap-4'>
                             <div className=' gap-4 md:gap-6 flex md:w-full md:flex-col flex-center '>
+
+                                <div onClick={() => setToggleChat(!toggleChat)} className={`side-btn ${toggleChat ? "border-t-2 md:border-t-[0px] md:border-r-2  border-sec" : "border-none"}`}>
+                                    <BsChatFill className='text-white' />
+                                </div>
+
                                 <div className='side-btn text-white border-sec  '>
                                     <BsFillMicFill />
                                 </div>
-                                <div onClick={() => endCall()} className='p-4 cursor-pointer text-white bg-red-500 trans hover:bg-white/10 rounded-full'>
-                                    <PiPhoneDisconnectFill />
-                                </div>
+                          
                                 <div className='side-btn text-white border-sec'>
                                     <BsFillCameraVideoFill />
+                                </div>
+
+                                <div onClick={() => endCall()} className='p-4 cursor-pointer text-white bg-red-500 trans hover:bg-white/10 rounded-full'>
+                                    <PiPhoneDisconnectFill />
                                 </div>
                             </div>
 
                         </div>
                     </div>
 
-                    {/* Video  */}
-                    <div className='flex-1 bg-[url("/bg9.svg")] bg-no-repeat bg-cover overflow-auto '>
-                    
-                        {/* Header */}
-                        <div className='w-full flex relative flex-col h-full backdrop-blur-[100px] bg-prim/70'>
 
-                            <div className='w-full px-6 h-[70px] lg:h-[90px] border-b border-b-black relative flex items-center'>
+                    {/* Chat */}
+                    <div className={` absolute z-[1000] bg-slate-900 w-full lg:relative lg:bg-transparent xl:block h-full trans ${!toggleChat ? "w-0 hidden lg:w-0 " : "md:w-[450px]"}`}>
+                        <Chat setToggleChat={setToggleChat} connection={conn.current} chats={chats} setChats={setChats} />
+                    </div>
+
+
+                    {/* Video  */}
+                    <div className='flex-1 relative z-[100] bg-no-repeat bg-cover overflow-auto '>
+
+                        {/* Header */}
+                        <div className='w-full flex relative flex-col h-full backdrop-blur-[100px] '>
+
+                            <div className='w-full px-6 h-[70px] border-b border-b-white/20 relative flex items-center'>
 
                                 <h3 className='w-[100px] truncate lg:w-auto md:block text-xl font-bold'>{roomIdRef.current}</h3>
                                 <button disabled={copied} onClick={() => copyRoomId(roomIdRef?.current as string, setCopied)} className='bg-sec trans mx-3 p-2 rounded-md font-semibold'>
-                                    {copied ? "Copied" : <BsFillShareFill  />}
+                                    {copied ? "Copied" : <BsFillShareFill />}
                                 </button>
                                 <div className='ml-auto  trans flex items-center gap-4 text-2xl'>
+
                                     <div onClick={() => setCols(1)} className={`p-2  cursor-pointer ${cols === 1 ? "border-b-2 border-b-sec" : ""}`}>
                                         <BsFillSquareFill className={`${cols === 1 ? "text-sec" : "text-gray-500"}`} />
                                     </div>
@@ -337,7 +356,7 @@ const Room: React.FC<props> = ({ user }) => {
                             </div>
                             {/* style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }} */}
                             <div id="stream-container" className='grid h-full overflow-auto trans p-8 grid-rows-auto grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8  w-full'>
-                                <div className={`w-full relative  overflow-hidden ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[315px]"} trans  object-cover bg-black/50 rounded-xl`}>
+                                <div className={`w-full relative  overflow-hidden ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[315px]"} trans  object-cover bg-black/50   rounded-sm`}>
                                     <div className='absolute inset-0 bg-gradient-to-t from-black/70 flex items-end gap-3 via-transparent p-3 to-transparent w-full'>
                                         <img src={user?.image} className='rounded-full border-2 border-red-400 w-10 h-10 object-cover' alt="" />
                                         <p className='mb-[.5rem]'>{user?.name}</p>
@@ -359,11 +378,8 @@ const Room: React.FC<props> = ({ user }) => {
 
                     </div>
 
-                    {/* Chat */}
-                    <div className='w-[450px] hidden xl:block h-full'>
-                        <Chat connection={conn.current} chats={chats} setChats={setChats} />
-                    </div>
-                    <div></div>
+
+
                 </div>
             </>
         )

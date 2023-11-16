@@ -7,7 +7,7 @@ interface props{
 const Logo : FC<props> = ({version}) => {
     
     return (
-        <h1 className='font-logo text-[2rem] text-red-400 '>{
+        <h1 className='font-logo text-[2rem] text-sec '>{
         !version || version ==="standard"?"VOX":"V"
         }</h1>
     )

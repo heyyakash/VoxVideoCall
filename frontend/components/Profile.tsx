@@ -63,7 +63,7 @@ const Profile = () => {
         return <Loading />
     }
     return (
-        <section className='min-h-[100vh] relative bg-[url("/bg5-mob.svg")] lg:bg-[url("/bg5.svg")] bg-cover bg-no-repeat '>
+        <section className='min-h-[100vh] relative bg-gradient-to-t from-slate-900/60 to-black/80  '>
             <div className="absolute top-1 md:top-3 z-[100] w-full md:w-[auto] md:right-3 p-4 md:p-2 flex gap-2">
                 <div className='rounded-lg bg-white w-full text-black flex items-center gap-3 p-3 padding text-sm font-semibold'>
                     <img onError={(e)=>errorImageHandler(e)} className='w-7 h-7 rounded-full' src={user?.image} alt="photo" />
