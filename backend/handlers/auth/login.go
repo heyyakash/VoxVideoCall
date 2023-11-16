@@ -111,8 +111,17 @@ func LoginUsingGoogle() gin.HandlerFunc {
 		}
 
 		//success response
-		ctx.SetCookie("auth", token, 3600, "/", "localhost", false, true)
-		log.Println(pathToUrl)
+		cookie := &http.Cookie{
+			Name:     "auth",
+			Value:    token,
+			Path:     "/",
+			Domain:   ctx.Request.Host,
+			Expires:  time.Now().Add(1 * time.Hour),
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteNoneMode,
+		}
+		http.SetCookie(ctx.Writer, cookie)
 		ctx.Redirect(http.StatusTemporaryRedirect, fmt.Sprint(helpers.LoadConnectionString("CLIENT_ORIGIN"), pathToUrl))
 
 	}
