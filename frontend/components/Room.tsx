@@ -36,7 +36,7 @@ const Room: React.FC<props> = ({ user }) => {
     const stream = useRef<MediaStream>()
     const peers: { [key: string]: RTCPeerConnection } = {}
     const [remoteStream, setRemoteStream] = useState<remoteStream[]>([])
-    const [toggleChat, setToggleChat] = useState(true)
+    const [toggleChat, setToggleChat] = useState(false)
 
     //function to end call
     const endCall = () => {
@@ -330,7 +330,7 @@ const Room: React.FC<props> = ({ user }) => {
 
 
                     {/* Video  */}
-                    <div className='flex-1 relative z-[100] bg-no-repeat bg-cover overflow-auto '>
+                    <div className={`flex-1 ${toggleChat?"hidden md:block":""} relative z-[100] bg-no-repeat bg-cover overflow-auto `}>
 
                         {/* Header */}
                         <div className='w-full flex relative flex-col h-full backdrop-blur-[100px] '>
