@@ -17,6 +17,7 @@ func Logout() gin.HandlerFunc {
 			Expires:  time.Unix(1, 0),
 			HttpOnly: true,
 			Secure:   true,
+			SameSite: http.SameSiteNoneMode,
 		}
 		http.SetCookie(ctx.Writer, cookie)
 		ctx.Redirect(http.StatusSeeOther, "/login")
