@@ -8,7 +8,7 @@ import (
 )
 
 func LoadConnectionString(key string) string {
-	err := godotenv.Load(".env")
+	err := godotenv.Load("./certs/.env")
 	if err != nil {
 		log.Fatalf("Error Loading the .env file")
 	}

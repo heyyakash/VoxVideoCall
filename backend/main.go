@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 	"videocallapp/configs"
+	"videocallapp/helpers"
 	"videocallapp/models"
 	"videocallapp/routes"
 
@@ -20,13 +21,13 @@ func main() {
 		})
 	})
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowOrigins:     []string{helpers.LoadConnectionString("CLIENT_ORIGIN")},
 		AllowMethods:     []string{"PUT", "PATCH", "POST", "OPTIONS", "GET", "DELETE"},
 		AllowHeaders:     []string{"Origin", "auth-token", "content-type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
-			return origin == "http://localhost:3000"
+			return origin == helpers.LoadConnectionString("CLIENT_ORIGIN")
 		},
 		MaxAge: 12 * time.Hour,
 	}))
