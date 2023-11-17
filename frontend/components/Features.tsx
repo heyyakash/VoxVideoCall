@@ -51,8 +51,9 @@ export const Feature2 = () => {
           <button className='btn-primary w-[350px] relative'>Join room</button>
           <FaArrowPointer className='text-2xl absolute animate-bounce text-black z-10 -bottom-2 left-[60%] ' />
         </div>
-          <div className='flex flex-wrap gap-4 mt-10'>
-            <Image height={500} width={500} src="/pic1.webp" className='rounded-xl' alt="photo" />
+          <div className='flex w-[800px] bg-white gap-4 mt-10'>
+            {/* <Image height={500} width={500} src="/pic1.webp" className='rounded-xl' alt="photo" />
+            <Image height={500} width={500} src="/pic2.avif" className='rounded-xl w-[400px]' alt="photo" /> */}
           </div>
         </div>
       </div>

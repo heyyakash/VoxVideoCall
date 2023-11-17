@@ -1,13 +1,15 @@
 import { createUser, loginUser } from '@/api/user'
 import Logo from '@/components/Logo'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiFillApple, AiOutlineArrowRight, AiOutlineGoogle, AiOutlineUser } from 'react-icons/ai'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { FcPortraitMode } from 'react-icons/fc'
 import { MdOutlineAlternateEmail } from 'react-icons/md'
 import Link from 'next/link'
 import { getGoogleUrl } from '@/helpers/googleOAuth'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [name, setName] = useState("")
@@ -41,18 +43,25 @@ const Login = () => {
     e.preventDefault()
     const result = await loginUser(email, password)
     if (result?.success) {
-      localStorage.setItem("vox_email", email)
-      localStorage.setItem("vox_user", result.message)
+      // localStorage.setItem("vox_email", email)
+      // localStorage.setItem("vox_user", result.message)
       router.push('/profile')
+    }else{
+      showToastMessage(result.message)
     }
   }
 
 
-
+  const showToastMessage = (msg:string) => {
+    console.log(msg)
+    toast.error(msg,{
+      position:toast.POSITION.TOP_RIGHT
+    })
+  }
 
   return (
     <section className='min-h-[100vh] w-full relative bg-[url("/canvas3.jpg")] bg-opacity-10 bg-cover md:bg-contain  bg-no-repeat'>
-
+      <ToastContainer />
       <div className=' absolute inset-0 z-10 flex-center  bg-black/70 flex-col gap-[2rem]'></div>
 
       <div className='w-full h-full flex flex-col items-center relative  text-center  z-10 py-[4rem]' >
