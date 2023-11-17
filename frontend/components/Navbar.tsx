@@ -14,8 +14,8 @@ const Navbar = () => {
                 </div>
                 <div className='flex gap-[2rem] border-2 border-sec/20 trans font-semibold p-2 px-4 rounded-[30px] flex-center'>
                     <a href="" className='trans hover:text-sec '>About</a>
-                    <a href="" className='trans hover:text-sec '>Features</a>
-                    <a href="" className='trans hover:text-sec '>Github</a>
+                    <a href="#feature" className='trans hover:text-sec '>Features</a>
+                    <a href="https://github.com/heyyakash/videocallapp" className='trans hover:text-sec '>Github</a>
                 </div>
                 <Link
                     href="/login"

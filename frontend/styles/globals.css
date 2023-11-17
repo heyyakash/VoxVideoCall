@@ -33,6 +33,10 @@
   background: #555;
 }
 
+html{
+  scroll-behavior: smooth
+}
+
 @layer base{
   *{
     @apply box-border;

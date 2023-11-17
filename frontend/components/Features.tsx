@@ -3,36 +3,74 @@ import { BsChat, BsFillChatFill } from 'react-icons/bs';
 import { TbHandClick } from "react-icons/tb";
 import { CiVideoOn } from "react-icons/ci";
 import { MdOutlineCleaningServices } from "react-icons/md";
+import { FaArrowPointer } from "react-icons/fa6";
+import Image from 'next/image';
 
 
 
 interface BoxProps {
-  text: string
-  Icon: ReactNode
+  children: ReactNode
 }
 
 
-export const Box: FC<BoxProps> = ({ text, Icon }) => {
+export const Box: FC<BoxProps> = ({ children }) => {
   return (
-    <div className='bg-slate-900/40 h-[300px] w-full rounded-md gap-3 flex-center text-4xl flex-col'>
-      {Icon}
-      <p className='text-sm w-[120px] text-center'>{text}</p>
+    <div className='w-full min-h-[100vh] relative'>
+      {children}
     </div>
   )
 }
 
+export const Feature1 = () => {
+  return (
+    <>
+      <div className='absolute w-full h-full top-0 left-0 z-0 bg-gradient-to-b from-transparent via-black/80 to-black'></div>
+      <div className='absolute w-full h-full top-0 left-0 z-0 bg-[url("/gp5.png")] bg-contain bg-bottom animate-pulse'></div>
+      <div className='w-full h-[100vh] relative flex-center flex-col'>
+        <h1 className='bg-gradient-to-r -mt-[5rem] from-red-400  to-white bg-clip-text text-transparent'>Room creation in 1 click </h1>
+        <p className='text-lg -mt-2'>Want to call friends? Just one click away!</p>
+        <div className=' relative h-auto w-[350px] mt-5'>
+          <button className='btn-primary w-[350px] relative'>Create room</button>
+          <FaArrowPointer className='text-2xl absolute animate-bounce text-black z-10 -bottom-2 left-[60%] ' />
+        </div>
+      </div>
+    </>
+  )
+}
+
+
+export const Feature2 = () => {
+  return (
+    <>
+    <div className='absolute w-full h-full top-0 left-0 z-0 bg-black'></div>
+      <div className='w-full h-[100vh] relative flex-center flex-col'>
+        <h1 className='bg-gradient-to-r -mt-[5rem] from-purple-400  to-green-400 bg-clip-text text-transparent'>Seamless Video calls </h1>
+        <p className='text-lg -mt-2'>Connect to Everyone!</p>
+        <div className=' relative h-auto w-[350px] mt-5'>
+        <div className=' relative h-auto w-[350px] mt-5'>
+          <button className='btn-primary w-[350px] relative'>Join room</button>
+          <FaArrowPointer className='text-2xl absolute animate-bounce text-black z-10 -bottom-2 left-[60%] ' />
+        </div>
+          <div className='flex flex-wrap gap-4 mt-10'>
+            <Image height={500} width={500} src="/pic1.webp" className='rounded-xl' alt="photo" />
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
 
 const Features = () => {
   return (
-    <section className='my-[5rem] w-full'>
-      <div className='max-w-[1200px] w-full p-4 md:p-0 mx-auto'>
-        <h3 className='text-4xl font-semibold' >Features</h3>
-        <div className='grid grid-cols-1 grid-rows-4 md:grid-cols-2 lg:grid-cols-4 lg:grid-rows-1 gap-5 my-5 md:grid-rows-2 '>
-          <Box text='One Click Room Creation' Icon = {<TbHandClick />} />
-          <Box text='Seamless Video calls' Icon = {<CiVideoOn />} />
-          <Box text='Inbuilt Chat' Icon = {<BsChat />} />
-          <Box text='Clean UI' Icon = {<MdOutlineCleaningServices />} />
-        </div>
+    <section id = "feature" className='mb-[5rem]  w-full'>
+      <div className='w-full p-4 md:p-0 mx-auto'>
+
+        <Box>
+          <Feature1 />
+        </Box>
+        <Box>
+          <Feature2 />
+        </Box>
       </div>
     </section>
   )

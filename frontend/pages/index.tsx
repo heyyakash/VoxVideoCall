@@ -13,9 +13,11 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
   return (
     <>
-    <Navbar />
-    <Hero />
-    <Features />
+      <Navbar />
+      <main className=' bg-[url("/canvas2.jpg")] bg-cover bg-fixed bg-no-repeat'>
+        <Hero />
+        <Features />
+      </main>
     </>
   )
 }
