@@ -76,7 +76,7 @@ const Profile = () => {
             <div className=' absolute inset-0 z-10 flex-center flex-col gap-[2rem]'>
                 <div className='flex-center flex-col'>
                     <h1 className='text-3xl md:text-[3.5rem] md:font-[700] mb-4'>Start a Video Call</h1>
-                    <p className='w-[60%] text-center font-semibold text-gray-300'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam reiciendis adipisci sit quam deserunt. Adipisci?</p>
+                    <p className='w-[60%] text-center font-semibold text-gray-300'>Wanna start a video call? or directly join a room? make yourselves comfortable here!</p>
                 </div>
                 <div className='max-w-[900px] w-full flex flex-col items-center justify-center md:flex-row md:flex-center gap-5'>
 
