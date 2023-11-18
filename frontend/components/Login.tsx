@@ -31,16 +31,17 @@ const Login = () => {
     if (isValidURL(image)) {
       const result = await createUser(name, image,email, password)
       if (result?.success) {
-        localStorage.setItem("vox_user", result.message)
-        router.push('/profile')
+        handleLogin()  
+      }else{
+        showToastMessage(result?.message)
       }
     }else{
-      alert("Invalid Image url")
+      showToastMessage("Invalid image url")
     }
 
   }
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleLogin = async (e?: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault()
     const result = await loginUser(email, password)
     if (result?.success) {
       // localStorage.setItem("vox_email", email)
