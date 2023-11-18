@@ -15,7 +15,7 @@ interface BoxProps {
 
 export const Box: FC<BoxProps> = ({ children }) => {
   return (
-    <div className='w-full min-h-[100vh] relative'>
+    <div className='w-full grid place-items-center h-[500px] lg:min-h-[100vh] relative'>
       {children}
     </div>
   )
@@ -43,8 +43,8 @@ export const Feature2 = () => {
   return (
     <>
     <div className='absolute w-full h-full top-0 left-0 z-0 bg-black'></div>
-      <div className='w-full h-[100vh] relative flex-center flex-col'>
-        <h1 className='bg-gradient-to-r -mt-[5rem] from-purple-400  to-green-400 bg-clip-text text-transparent'>Seamless Video calls </h1>
+      <div className='w-full h-[100vh] relative flex-center  flex-col'>
+        <h1 className='bg-gradient-to-r -mt-[5rem] from-purple-400  to-green-400 bg-clip-text text-center text-transparent'>Seamless Video calls with Inbuild Chat </h1>
         <p className='text-lg -mt-2'>Connect to Everyone!</p>
         <div className=' relative h-auto w-[350px] mt-5'>
         <div className=' relative h-auto w-[350px] mt-5'>
@@ -52,8 +52,7 @@ export const Feature2 = () => {
           <FaArrowPointer className='text-2xl absolute animate-bounce text-black z-10 -bottom-2 left-[60%] ' />
         </div>
           <div className='flex w-[800px] bg-white gap-4 mt-10'>
-            {/* <Image height={500} width={500} src="/pic1.webp" className='rounded-xl' alt="photo" />
-            <Image height={500} width={500} src="/pic2.avif" className='rounded-xl w-[400px]' alt="photo" /> */}
+            
           </div>
         </div>
       </div>
@@ -64,7 +63,7 @@ export const Feature2 = () => {
 const Features = () => {
   return (
     <section id = "feature" className='mb-[5rem]  w-full'>
-      <div className='w-full p-4 md:p-0 mx-auto'>
+      <div className='w-full md:p-0 mx-auto'>
 
         <Box>
           <Feature1 />
@@ -72,6 +71,8 @@ const Features = () => {
         <Box>
           <Feature2 />
         </Box>
+      
+
       </div>
     </section>
   )

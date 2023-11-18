@@ -7,15 +7,15 @@ const Navbar = () => {
     const router = useRouter()
     return (
         <nav className='fixed h-[80px] w-full z-[100] bg-black/30 backdrop-blur-lg '>
-            <div className='flex items-center h-full justify-between max-w-[1200px] w-full mx-auto '>
+            <div className='flex items-center px-4 lg:px-0 h-full justify-between max-w-[1200px] w-full mx-auto '>
                 <div className='flex items-center gap-4'>
                     <Logo version='lite' />
                     <p className='text-xl'>vox</p>
                 </div>
-                <div className='flex gap-[2rem] border-2 border-sec/20 trans font-semibold p-2 px-4 rounded-[30px] flex-center'>
-                    <a href="" className='trans hover:text-sec '>About</a>
+                <div className=' gap-[2rem] border-2 border-sec/20 trans font-semibold p-2 px-4 rounded-[30px] md:flex-center hidden'>
+                    <a href="#about" className='trans hover:text-sec '>About</a>
                     <a href="#feature" className='trans hover:text-sec '>Features</a>
-                    <a href="https://github.com/heyyakash/videocallapp" className='trans hover:text-sec '>Github</a>
+                    <a href="https://github.com/heyyakash/videocallapp" target='_blank' className='trans hover:text-sec '>Github</a>
                 </div>
                 <Link
                     href="/login"
