@@ -309,7 +309,7 @@ const Room: React.FC<props> = ({ user }) => {
                                 <div className='side-btn text-white border-sec  '>
                                     <BsFillMicFill />
                                 </div>
-                          
+
                                 <div className='side-btn text-white border-sec'>
                                     <BsFillCameraVideoFill />
                                 </div>
@@ -324,13 +324,13 @@ const Room: React.FC<props> = ({ user }) => {
 
 
                     {/* Chat */}
-                    <div className={` absolute z-[1000] bg-slate-900 w-full lg:relative lg:bg-transparent  h-full trans ${!toggleChat ? "w-0 hidden z-[-1] lg:flex lg:w-0" : "md:w-[450px]"}`}>
+                    <div className={` absolute z-[1000] bg-slate-900 w-full lg:relative lg:bg-transparent  h-full trans ${!toggleChat ? "w-0 hidden  lg:w-0" : "md:w-[450px]"}`}>
                         <Chat setToggleChat={setToggleChat} connection={conn.current} chats={chats} setChats={setChats} />
                     </div>
 
 
                     {/* Video  */}
-                    <div className={`flex-1 ${toggleChat?"hidden md:block":""} relative z-[100] bg-no-repeat bg-cover overflow-auto `}>
+                    <div className={`flex-1 ${toggleChat ? "hidden md:block" : ""} relative z-[100] bg-no-repeat bg-cover overflow-auto `}>
 
                         {/* Header */}
                         <div className='w-full flex relative flex-col h-full backdrop-blur-[100px] '>
@@ -355,7 +355,7 @@ const Room: React.FC<props> = ({ user }) => {
                                 </div>
                             </div>
                             {/* style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }} */}
-                            <div id="stream-container" className='grid h-full overflow-auto trans p-8 grid-rows-auto grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8  w-full'>
+                            <div id="stream-container" className='grid h-full overflow-auto trans p-8 grid-rows-auto gap-y- grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8  w-full'>
                                 <div className={`w-full relative  overflow-hidden ${cols === 1 ? "h-[80vh]" : cols === 2 ? "h-[50vh]" : "h-[315px]"} trans  object-cover bg-black/50   rounded-sm`}>
                                     <div className='absolute inset-0 bg-gradient-to-t from-black/70 flex items-end gap-3 via-transparent p-3 to-transparent w-full'>
                                         <img src={user?.image} className='rounded-full border-2 border-red-400 w-10 h-10 object-cover' alt="" />
@@ -370,6 +370,7 @@ const Room: React.FC<props> = ({ user }) => {
                                         <VideoElement key={i} email={x.email} image={x.image} name={x.name} stream={x.stream} cols={cols} />
                                     )
                                 })}
+                             
 
                             </div>
                         </div>
