@@ -37,5 +37,5 @@ func main() {
 	if err := r.RunTLS(":5000", helpers.LoadConnectionString("CERTIFICATE"), helpers.LoadConnectionString("KEY")); err != nil {
 		log.Fatalf("Could not start the server ", err)
 	}
-	//testing ci 3
+	//testing ci 4
 }
