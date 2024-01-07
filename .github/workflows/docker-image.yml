@@ -25,3 +25,17 @@ jobs:
           context: backend/
           push: true
           tags: heyyakash/vox:latest
+
+      - name: SSH 
+        uses: webfactory/ssh-agent@v0.8.0
+        with: 
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name : SSH into digital ocean server
+        run : ssh -i ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_KEY }} ${{ secrets.SSH_IP }}
+
+      - name: Pull and run docker image
+        run: docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASSWORD }} && docker stop vox-backend || docker rm vox-backend || docker run -v /root/configs:/app/certs -d -p 5000:5000 --name vox-backend heyyakash/vox:latest"
+
+            
+        
