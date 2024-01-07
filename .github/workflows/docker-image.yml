@@ -35,7 +35,7 @@ jobs:
         run : ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_IP }}
 
       - name: Pull and run docker image
-        run: docker stop vox-backend || docker rm vox-backend || docker run -v /root/configs:/app/certs -d -p 5000:5000 --name vox-backend heyyakash/vox:latest"
+        run: docker stop vox-backend || docker rm vox-backend || docker run -v /root/configs:/app/certs -d -p 5000:5000 --name vox-backend heyyakash/vox:latest
 
             
         
