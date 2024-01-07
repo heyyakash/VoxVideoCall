@@ -32,10 +32,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
       - name : SSH into digital ocean server
-        run : ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_IP }}
-
-      - name: Pull and run docker image
-        run: docker stop vox-backend || docker rm vox-backend || docker run -v /root/configs:/app/certs -d -p 5000:5000 --name vox-backend heyyakash/vox:latest
+        run : ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_IP }} "docker stop vox-backend || docker rm vox-backend || docker run -v /root/configs:/app/certs -d -p 5000:5000 --name vox-backend heyyakash/vox:latest"
 
             
         
