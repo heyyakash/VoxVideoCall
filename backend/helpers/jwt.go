@@ -4,9 +4,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var sampleSecretKey = []byte("SHEHEHEHE")
-
-const key = "This is a new key"
+var sampleSecretKey = []byte(LoadConnectionString("JWT_SECRET"))
 
 type userClaims struct {
 	jwt.RegisteredClaims
