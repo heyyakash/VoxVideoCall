@@ -102,11 +102,11 @@ const Login = () => {
         </form>
         <p className='mt-5 cursor-pointer'>Have an account already ?<span onClick={() => setMode(mode === "login" ? "signup" : "login")} className='text-blue-600'>{mode === "login" ? "Sign up" : "Sign in"}</span></p>
         <div className='flex mt-12 gap-6 itemse-center text-start'>
-          <Link href = {getGoogleUrl(from)} className='oauthbox'>
+          {/* <Link href = {getGoogleUrl(from)} className='oauthbox'>
             <AiOutlineGoogle className='text-3xl' />
             <p className='mt-4'>Sign up</p>
             <h5 className='font-[600]'>with Google</h5>
-          </Link>
+          </Link> */}
         </div>
       </div>
 
